@@ -1,4 +1,23 @@
 <?php
+	
+function get_post($index = '', $xss_clean = FALSE) {
+	$CI =& get_instance();
+	$get_data = $CI->input->get(NULL, $xss_clean);
+	$post_data = $CI->input->post(NULL, $xss_clean);
+	$get_data = empty($get_data) || $get_data == false ? array() : $get_data;
+	$post_data = empty($post_data) || $post_data == false ? array() : $post_data;
+	
+	$all = array_merge($get_data,$post_data);
+	
+	if (empty($index)) {
+		return $all;
+	} else {
+		$return_rs = isset($all[$index]) ? $all[$index] : '';
+		return $return_rs;
+	}
+	 
+}
+
 /*
 	·µ»Ø¶©µ¥Ö§¸¶×´Ì¬
 */

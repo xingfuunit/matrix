@@ -9,7 +9,7 @@
 define('HTTP_TIME_OUT',-3);
 class curl{
 
-    var $timeout = 10;
+    var $timeout = 8;
     var $defaultChunk = 4096;
     var $http_ver = '1.1';
     var $hostaddr = null;

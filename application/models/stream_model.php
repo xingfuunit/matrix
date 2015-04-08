@@ -22,16 +22,9 @@ class Stream_model extends MY_Model {
     }
     
     //第一次记录信息
-    function log_first ($request_data) {
-		$data = array();
-		$data['request_data'] = json_encode($request_data);
-		$data['createtime'] = time();
-		$data['last_modified'] = time();
-		return parent::save($data);
-    }
-    
-    function log_second ($data,$stream_id) {
-    //	var_dump($data);exit;
+    function log_first ($data) {
+    	
+    	$request_data = get_post(NULL);
 		$rs = array();
 		$rs['order_bn'] = $data['order_bn'];
 		$rs['from_method'] = $data['from_method'];
@@ -39,8 +32,21 @@ class Stream_model extends MY_Model {
 		$rs['to_sys'] = $data['to_sys'];
 		$rs['from_sys'] = $data['from_sys'];
 		$rs['response_data'] = json_encode($data['response_data']);
+    	
+		$rs['request_data'] = json_encode($request_data);
+		$rs['createtime'] = time();
+		$rs['last_modified'] = time();
+		
+		return parent::save($rs);
+    }
+    //第二次记录信息
+    function log_second ($post_data,$stream_id) {
+    //	var_dump($data);exit;
+		$rs = array();
+		$rs['return_data'] = json_encode($post_data);
 		return parent::update($rs,array('stream_id'=>$stream_id));
     }
+    
     
     
     

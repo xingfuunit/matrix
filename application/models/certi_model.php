@@ -22,12 +22,14 @@ class Certi_model extends MY_Model {
     }
     
     //验证请求信息
-    function check($certi,$timestamp,$token='') {
+    function check($certi,$timestamp,$token,$to_certi) {
+    	
     	$rs = parent::findByAttributes(array('certi_name'=>$certi));
     	if ($rs) {
     		$md5_key = md5($rs['certi_name'].$rs['certi_key'].$timestamp);
     		if ($token == $md5_key) {
-    			return true;
+    			$to_rs = parent::findByAttributes(array('certi_name'=>$to_certi));
+    			return $to_rs['api_url'];
     		}
     	} 
     	return false;

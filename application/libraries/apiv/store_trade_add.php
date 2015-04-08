@@ -9,14 +9,13 @@ class Store_trade_add {
 	}
     
     function _init() {
-    	$CI =& get_instance();
-    	$request_data = $CI->input->get_post(NULL);
+    	$request_data = get_post(NULL);
     	$response_data = array();
     	$response_data['pay_bn'] = $request_data['payment_tid'];
     	$response_data['to_api_v'] = $request_data['to_api_v'];
     	$response_data['weight'] = $request_data['total_weight'];
     	$response_data['cur_rate'] = $request_data['currency_rate'];
-    	$response_data['from_node_id'] = $request_data['from_node_id'];
+    	$response_data['from_node_id'] = '1964902530';
     	$response_data['msg_id'] = '';//信息ＩＤ空
     	$response_data['consignee'] = json_encode(
     												array('r_time'=>$request_data['receiver_time'],
