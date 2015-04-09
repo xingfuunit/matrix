@@ -15,7 +15,7 @@ class Store_trade_add {
     	$response_data['to_api_v'] = $request_data['to_api_v'];
     	$response_data['weight'] = $request_data['total_weight'];
     	$response_data['cur_rate'] = $request_data['currency_rate'];
-    	$response_data['from_node_id'] = '1964902530';
+    	$response_data['from_node_id'] = $request_data['from_node_id'];
     	$response_data['msg_id'] = '';//信息ＩＤ空
     	$response_data['consignee'] = json_encode(
     												array('r_time'=>$request_data['receiver_time'],
@@ -30,8 +30,8 @@ class Store_trade_add {
     												'name'=>$request_data['receiver_name'],	
     		));
     	
-    	$response_data['app_id'] = $request_data['app_id'];
-    	$response_data['sign'] = $request_data['sign'];
+    //	$response_data['app_id'] = $request_data['app_id'];
+    //	$response_data['sign'] = $request_data['sign'];
     	$response_data['currency'] = $request_data['currency'];
     	$response_data['node_type'] = $request_data['node_type'];
     	$response_data['refresh_time'] = date("Y-m-d h:i:s");
@@ -43,7 +43,7 @@ class Store_trade_add {
     	$response_data['cost_tax'] = $request_data['pay_cost'];
     	$response_data['lastmodify'] = $request_data['lastmodify'];
     	$response_data['branch_id'] = $request_data['branch_id'];
-    	$response_data['consigner'] = array();//发货人
+    //	$response_data['consigner'] = array();//发货人
     	$response_data['title'] = $request_data['title'];
     	$response_data['tax_type'] = $request_data['tax_type'];
     	$response_data['node_version'] = '2.0';
@@ -142,7 +142,7 @@ class Store_trade_add {
     	$response_data['order_objects'] = json_encode($order_objects);
     	
     	
-    	return array('response_data'=>$response_data,'order_bn'=>$response_data['order_bn'],'from_method'=>$request_data['method'],'to_method'=>'ome.order.add','to_sys'=>'erp','from_sys'=>'ecstore');
+    	return array('response_data'=>$response_data,'order_bn'=>$response_data['order_bn'],'from_method'=>$request_data['method'],'node_type'=>$request_data['node_type']);
     //	$CI->load->library('common/httpclient');
     	
     }
