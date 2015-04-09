@@ -28,9 +28,7 @@ class Stream_model extends MY_Model {
 		$rs = array();
 		$rs['order_bn'] = $data['order_bn'];
 		$rs['from_method'] = $data['from_method'];
-		$rs['to_method'] = $data['to_method'];
-		$rs['to_sys'] = $data['to_sys'];
-		$rs['from_sys'] = $data['from_sys'];
+		$rs['node_type'] = $data['node_type'];
 		$rs['response_data'] = json_encode($data['response_data']);
     	
 		$rs['request_data'] = json_encode($request_data);

@@ -29,7 +29,7 @@ class Certi_model extends MY_Model {
     		$md5_key = md5($rs['certi_name'].$rs['certi_key'].$timestamp);
     		if ($token == $md5_key) {
     			$to_rs = parent::findByAttributes(array('certi_name'=>$to_certi));
-    			return $to_rs['api_url'];
+    			return $to_rs;
     		}
     	} 
     	return false;

@@ -360,3 +360,8 @@ $config['proxy_ips'] = '';
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */
+
+
+
+$config['ec_token'] = '2df7977ebc9ff0c5418ab51e63f38555f5f7fcaa5046adf1c399411942ce104c';
+$config['erp_token'] = '4cd2a2bf670903cd98285695b9072ff5ade910b61f7e417ac4b05413ca5c574f';

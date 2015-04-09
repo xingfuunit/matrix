@@ -68,3 +68,19 @@ function get_ship_status($status) {
 	}
 	return $return_status;
 }
+
+
+function get_sign($params,$token){ 
+    return strtoupper(md5(strtoupper(md5(assemble($params))).$token)); 
+} 
+
+function assemble($params) 
+{ 
+    if(!is_array($params))  return null; 
+    ksort($params,SORT_STRING); 
+    $sign = ''; 
+    foreach($params AS $key=>$val){ 
+        $sign .= $key . (is_array($val) ? assemble($val) : $val); 
+    } 
+    return $sign; 
+} 
