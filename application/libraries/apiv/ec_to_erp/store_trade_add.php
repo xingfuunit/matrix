@@ -147,7 +147,9 @@ class Store_trade_add {
     	
     }
     
-    
+    function result($post_data) {
+    	
+    }
     
     
 }

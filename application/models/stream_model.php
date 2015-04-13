@@ -38,11 +38,16 @@ class Stream_model extends MY_Model {
 		return parent::save($rs);
     }
     //第二次记录信息
-    function log_second ($post_data,$stream_id) {
+    function log_second ($data,$stream_id) {
     //	var_dump($data);exit;
 		$rs = array();
-		$rs['return_data'] = json_encode($post_data);
+		$rs['return_data'] = json_encode($data['return_data']);
+		$rs['callback_url'] = $data['callback_url'];
+		$rs['callback_data'] = json_encode($data['callback_data']);
+		$rs['return_callback'] = '';
+		$rs['msg_id'] = md5($stream_id);
 		return parent::update($rs,array('stream_id'=>$stream_id));
+		
     }
     
     
