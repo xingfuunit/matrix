@@ -8,7 +8,7 @@ class Request extends Api_Controller {
 	{
 		$certi = get_post('matrix_certi',true);//证书名，32位
 		$timestamp = get_post('matrix_timestamp',true); //时间戳
-		$token = get_post('matrix_token',true); //验证码 md5(证书名加密匙加时间戳)
+		$sign = get_post('sign',true); //验证码 md5(证书名加密匙加时间戳)
 		$to_certi = get_post('matrix_to_certi',true); //验证码 md5(证书名加密匙加时间戳)
 		
 		$txt = get_post(NULL);
@@ -16,7 +16,7 @@ class Request extends Api_Controller {
 		
 		//验证请求
 		$this->load->model('certi_model');
-		$check_data = $this->certi_model->check($certi,$timestamp,$token,$to_certi);
+		$check_data = $this->certi_model->check($certi,$timestamp,$sign,$to_certi);
 		if ($check_data == false) {
 			die('{"res": "fail", "msg_id": "", "rsp": "e00093", "err_msg": "sign error", "data": "sign error"}');
 		}
@@ -44,7 +44,7 @@ class Request extends Api_Controller {
 					$now = time();
 					$data['response_data']['matrix_certi'] = $check_data['certi_name'];
 					$data['response_data']['matrix_timestamp'] = $now;
-					$data['response_data']['matrix_token'] = md5($check_data['certi_name'].$check_data['certi_key'].$now);
+					$data['response_data']['sign'] = md5($check_data['certi_name'].$check_data['certi_key'].$now);
 					
 					$return_data = $this->httpclient->post($check_data['api_url'],$data['response_data']);//发送
 					
