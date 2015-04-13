@@ -276,7 +276,14 @@ class Store_trade_update {
     }
     
     
-    
+    function result($params){
+    	if($params['return_data']){
+    		
+    		return json_encode(array('succ'));
+    	}else{
+    		
+    	}
+    }
     
 }
 

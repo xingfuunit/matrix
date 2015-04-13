@@ -92,17 +92,17 @@ class Store_trade_status_update {
     /**
      * 处理结果返回
      */
-    function result($is_succ=1,$data){
-    	if($is_succ){
+    function result($params){
+    	if($params['return_data']){
 //     		response:{"res": "", "msg_id": "552B2A49C0A81729CDF91D9A56F39D24", "err_msg": "", "data": "{\"tid\": \"150413102745968\"}", "rsp": "succ"}
     		$re = array(
     				'res' => '',
     				'msg_id' 	=> md5(time()),
     				'err_msg'	=> '',
     				'data'		=> json_encode(array('tid'=>$data['order_bn'])),
-    				'rsp'		=> 'succ',
+    				'rsp'		=> 'success',
     				);
-    		echo json_encode($re);
+    		return json_encode($re);
     	}else{
     		echo json_encode(array('merr_msg'=>'error'));
     	}

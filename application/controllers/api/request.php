@@ -21,6 +21,8 @@ class Request extends Api_Controller {
 			die('{"res": "fail", "msg_id": "", "rsp": "e00093", "err_msg": "sign error", "data": "sign error"}');
 		}
 		
+		file_put_contents('api_juzhen.log', 'matrix_get:'.print_r(get_post(),1),FILE_APPEND);
+		
 		$this->load->model('stream_model');
 		if (get_post('method',true)) {
 			$method_name = get_post('method',true);
@@ -31,6 +33,9 @@ class Request extends Api_Controller {
 					$node_type = get_post('node_type',true) == 'ecos.b2c' ? 'erp_to_ec' : 'ec_to_erp';
 
 					$this->load->library('apiv/'.$node_type.'/'.$method_name);
+					
+					file_put_contents('api_juzhen.log', 'method_name:'.$method_name."\r\n",FILE_APPEND);
+					
 					$data = $this->$method_name->_init();
 					//记录数据1
 					$stream_id = $this->stream_model->log_first($data);
@@ -42,6 +47,8 @@ class Request extends Api_Controller {
 					$data['response_data']['matrix_token'] = md5($check_data['certi_name'].$check_data['certi_key'].$now);
 					
 					$return_data = $this->httpclient->post($check_data['api_url'],$data['response_data']);//发送
+					
+					file_put_contents('api_juzhen.log', 'return_data:'.print_r($return_data,1)."\r\n",FILE_APPEND);
 					
 					$return_callback = '';
 					$callback_url = '';
