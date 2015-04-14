@@ -28,6 +28,9 @@ function get_pay_status($pay_status) {
 	case 'PAY_NO':
 	  $return_status = 0;
 	  break;
+	case 'PAY_FINISH':
+	  $return_status = 1;
+	  break;
 	default:
 	  $return_status = "";
 	}
