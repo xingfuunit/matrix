@@ -46,6 +46,9 @@ class Request extends Api_Controller {
 					$data['response_data']['matrix_timestamp'] = $now;
 					$data['response_data']['sign'] = md5($check_data['certi_name'].$check_data['certi_key'].$now);
 					
+					file_put_contents('api_juzhen.log', 'data:'.print_r($data,1)."\r\n",FILE_APPEND);
+					file_put_contents('api_juzhen.log', 'data:'.$check_data['api_url']."\r\n",FILE_APPEND);
+					
 					$return_data = $this->httpclient->post($check_data['api_url'],$data['response_data']);//发送
 					
 					file_put_contents('api_juzhen.log', 'return_data:'.print_r($return_data,1)."\r\n",FILE_APPEND);

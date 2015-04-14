@@ -277,9 +277,19 @@ class Store_trade_update {
     
     
     function result($params){
-    	if($params['return_data']){
+    	$return_data = json_decode($params['return_data']);
+    	file_put_contents('api_juzhen.log', 'sotre_trade_update_J:'.print_r($return_data,1),FILE_APPEND);
+    	if($return_data->rsp == 'succ'){
+    		$re = array(
+    				'res' => '',
+    				'msg_id' 	=> md5(time()),
+    				'err_msg'	=> '',
+    				'data'		=> json_encode(array('tid'=>$return_data->data->tid)),
+    				'rsp'		=> 'success',
+    				);
     		
-    		return json_encode(array('succ'));
+    		file_put_contents('api_juzhen.log', 'sotre_trade_update:'.print_r($re,1),FILE_APPEND);
+    		return json_encode($re);
     	}else{
     		
     	}

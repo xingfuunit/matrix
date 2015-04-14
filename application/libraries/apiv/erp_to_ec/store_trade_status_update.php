@@ -63,7 +63,7 @@ class Store_trade_status_update {
     			//取消订单
     			case 'TRADE_CLOSED':
     				$response_data['status'] = 'dead';
-    				$response_data['task'] = '';
+    				$response_data['task'] = get_tark($request_data['tid']);
     				$response_data['from_api_v'] = $request_data['from_api_v'];
     				$response_data['consignee'] = json_encode(array());
     				$response_data['app_id'] = $request_data['node_type'];
@@ -93,15 +93,19 @@ class Store_trade_status_update {
      * 处理结果返回
      */
     function result($params){
-    	if($params['return_data']){
-//     		response:{"res": "", "msg_id": "552B2A49C0A81729CDF91D9A56F39D24", "err_msg": "", "data": "{\"tid\": \"150413102745968\"}", "rsp": "succ"}
+    	$return_data = json_decode($params['return_data']);
+//     	response:{"res": "", "msg_id": "552B2A49C0A81729CDF91D9A56F39D24", "err_msg": "", "data": "{\"tid\": \"150413102745968\"}", "rsp": "succ"}
+    	if($return_data->rsp == 'succ'){
     		$re = array(
     				'res' => '',
     				'msg_id' 	=> md5(time()),
     				'err_msg'	=> '',
-    				'data'		=> json_encode(array('tid'=>$data['order_bn'])),
+    				'data'		=> json_encode(array('tid'=>$return_data->data->tid)),
     				'rsp'		=> 'success',
     				);
+    		
+    		file_put_contents('api_juzhen.log', 'store_trede_status:'.print_r($re,1),FILE_APPEND);
+    		
     		return json_encode($re);
     	}else{
     		echo json_encode(array('merr_msg'=>'error'));
