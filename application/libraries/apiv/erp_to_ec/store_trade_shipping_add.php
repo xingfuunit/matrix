@@ -48,7 +48,7 @@ class store_trade_shipping_add {
 			$items[$key] = $tmp;
 		}	
 		
-		$response_data['items'] = $items;
+		$response_data['items'] = json_encode($items);
 		$response_data['buyer_id'] = $request_data['buyer_id'];
 		
 		//回调接口
@@ -56,7 +56,7 @@ class store_trade_shipping_add {
 		$callback_data = array();
 		$callback_data['res'] = '';
 		$callback_data['err_msg'] = '';
-		$callback_data['data'] = json_decode(array('tid'=>$request_data['tid'],'delivery_id'=>$request_data['shipping_id']));
+		$callback_data['data'] = json_encode(array('tid'=>$request_data['tid'],'delivery_id'=>$request_data['shipping_id']));
 		$callback_data['sign'] = '';
 		$callback_data['rsp'] = 'succ';
 		
@@ -66,7 +66,7 @@ class store_trade_shipping_add {
     }
     
     function result($post_data) {
-    	
+    	echo $post_data['return_data'];
     }
     
     
