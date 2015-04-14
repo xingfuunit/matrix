@@ -34,7 +34,7 @@ class Store_trade_update {
     	$find = array('promotion_name','promotion_fee',);
     	$replace = array('pmt_describe','pmt_amount',);
     	$response_data['pmt_detail'] = str_replace($find,$replace,$request_data['promotion_details']);
-    	$response_data['custom_mark'] = '';//未知字段
+    	$response_data['custom_mark'] = $request_data['buyer_memo'];//用户订单留言,用于前端显示
     	$response_data['cost_tax'] = $request_data['pay_cost'];
     	$response_data['lastmodify'] = $request_data['lastmodify'];
     	$response_data['branch_id'] = $request_data['branch_id'];
@@ -56,6 +56,7 @@ class Store_trade_update {
     	$response_data['score_g'] = $request_data['buyer_obtain_point_fee'];
     	$response_data['date'] = $request_data['date'];
     	$response_data['tax_title'] = $request_data['tax_content'];//不确定字段
+    	$response_data['mark_text'] = $request_data['trade_memo']; //订单备注(只是在EC和ERP交互用,前端不显示)
     	$response_data['orders_number'] = $request_data['orders_number'];
     	$response_data['shipping_tid'] = $request_data['shipping_tid'];
     	$response_data['total_amount'] = $request_data['total_trade_fee'];//不确定字段
