@@ -96,9 +96,19 @@ class MY_Model extends CI_Model
      * @param array $where
      * @return array 返回一维数组，未找到记录则返回空数组
      */
-    public function findByAttributes($where = array())
+    public function findByAttributes($where = array(),$sort = NULL)
     {
-        $query = $this->db->from($this->tableName())->where($where)->limit(1)->get();
+        $this->db->from($this->tableName())->where($where);
+        if($sort !== NULL) {
+            if(is_array($sort)){
+                foreach($sort as $value){
+                    $this->db->order_by($value, '', false);
+                }
+            } else {
+                $this->db->order_by($sort);
+            }
+        }
+        $query = $this->db->limit(1)->get();
         return $query->row_array();
     }
  
