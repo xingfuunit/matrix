@@ -66,7 +66,7 @@ class store_trade_shipping_add {
     }
     
     function result($post_data) {
-    	echo $post_data['return_data'];
+    //	echo $post_data['return_data'];
     }
     
     

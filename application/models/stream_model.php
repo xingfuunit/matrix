@@ -22,7 +22,7 @@ class Stream_model extends MY_Model {
     }
     
     //第一次记录信息
-    function log_first ($data) {
+    function log_first ($data,$form_certi,$to_certi) {
     	
     	$request_data = get_post(NULL);
 		$rs = array();
@@ -30,9 +30,13 @@ class Stream_model extends MY_Model {
 		$rs['from_method'] = $data['from_method'];
 		$rs['node_type'] = $data['node_type'];
 		$rs['response_data'] = serialize($data['response_data']);
-    	
 		$rs['request_data'] = serialize($request_data);
 		$rs['createtime'] = time();
+		$rs['callback_url'] = $data['callback_url'];
+		$rs['callback_data'] = serialize($data['callback_data']);
+		$rs['form_certi'] = $form_certi;
+		$rs['to_certi'] = $to_certi;
+		
 		//$rs['last_modified'] = time();
 		
 		return parent::save($rs);
@@ -47,6 +51,13 @@ class Stream_model extends MY_Model {
 		$rs['return_callback'] = '';
 		$rs['msg_id'] = md5($stream_id);
 		$rs['send_time'] = time();
+		$rs['send_status'] = 1;
+		if ($data['callback_url']) {
+			$rs['callback_status'] = 0;
+		} else {
+			$rs['callback_status'] = 2;
+		}
+		
 		return parent::update($rs,array('stream_id'=>$stream_id));
 		
     }
