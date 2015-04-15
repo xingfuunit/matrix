@@ -37,7 +37,8 @@ class Request extends Api_Controller {
 					
 					$data = $this->$method_name->_init();
 					//记录数据1
-					$stream_id = $this->stream_model->log_first($data);
+// 					$stream_id = $this->stream_model->log_first($data);
+					$stream_id = '123';
 					//转发
 					$this->load->library('common/httpclient');
 					$now = time();
@@ -45,12 +46,11 @@ class Request extends Api_Controller {
 					$data['response_data']['matrix_timestamp'] = $now;
 					$data['response_data']['sign'] = md5($check_data['certi_name'].$check_data['certi_key'].$now);
 					
-					file_put_contents('api_juzhen.log', 'data:'.print_r($data,1)."\r\n",FILE_APPEND);
 					file_put_contents('api_juzhen.log', 'data:'.$check_data['api_url']."\r\n",FILE_APPEND);
 					
 					$return_data = $this->httpclient->post($check_data['api_url'],$data['response_data']);//发送
 					
-					file_put_contents('api_juzhen.log', 'return_data:'.print_r($return_data,1)."\r\n",FILE_APPEND);
+					file_put_contents('api_juzhen.log', 'httpclient_data:'.print_r($return_data,1)."\r\n",FILE_APPEND);
 					
 					$return_callback = '';
 					$callback_url = '';
@@ -61,7 +61,11 @@ class Request extends Api_Controller {
 					}
 					
 					$result = $this->$method_name->result(array('return_data'=>$return_data,'msg_id'=>md5($stream_id)));
-					echo $result;
+					
+					file_put_contents('api_juzhen.log', 'result :'.print_r($result,1)."\r\n",FILE_APPEND);
+					
+					
+					die($result);
 					//记录数据2
 					$this->stream_model->log_second(array('return_data'=>$return_data,'callback_url'=>$callback_url,'callback_data'=>$callback_data,'return_callback'=>''),$stream_id);
 				}

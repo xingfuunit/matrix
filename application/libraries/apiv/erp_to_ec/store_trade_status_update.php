@@ -54,8 +54,6 @@ class Store_trade_status_update {
     
     function _init() {
     	$request_data = get_post(NULL);
-    	file_put_contents('api_juzhen.log', print_r($request_data,1),FILE_APPEND);
-    	
     	
     	if($request_data['type'] == 'status'){
     		switch ($request_data['status'])
@@ -94,22 +92,9 @@ class Store_trade_status_update {
      */
     function result($params){
     	$return_data = json_decode($params['return_data']);
-//     	response:{"res": "", "msg_id": "552B2A49C0A81729CDF91D9A56F39D24", "err_msg": "", "data": "{\"tid\": \"150413102745968\"}", "rsp": "succ"}
-    	if($return_data->rsp == 'succ'){
-    		$re = array(
-    				'res' => '',
-    				'msg_id' 	=> md5(time()),
-    				'err_msg'	=> '',
-    				'data'		=> json_encode(array('tid'=>$return_data->data->tid)),
-    				'rsp'		=> 'success',
-    				);
-    		
-    		file_put_contents('api_juzhen.log', 'store_trede_status:'.print_r($re,1),FILE_APPEND);
-    		
-    		return json_encode($re);
-    	}else{
-    		echo json_encode(array('merr_msg'=>'error'));
-    	}
+    	
+    	//订单取消必须 返回 succ
+    	return json_encode(array('res'=>'', 'msg_id'=>md5(time()), 'rsp'=>'succ', 'err_msg'=>'', 'data'=>array('tid'=>$return_data->data->tid)));
     }
     
     
