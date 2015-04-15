@@ -43,22 +43,22 @@ class Request extends Api_Controller {
 					}
 					
 					$return_data = $this->httpclient->post($check_data['api_url'],$data['response_data']);//发送
-					$return_callback = '';
-					$callback_url = '';
+					
+					//返回
+					$result = $this->$method_name->result(array('return_data'=>$return_data,'msg_id'=>md5($stream_id)));
+					echo($result);
+					
+					
+					//回调
 					$callback_data = '';
-					if (isset($data['callback_data'])) {
-						
-						//增加msg_id
-						if (isset($data['callback_data']['msg_id'])) {
-							$data['callback_data']['msg_id'] = md5($stream_id);
-						}
-						
-						$callback_data = $data['callback_data'];
-						$callback_url = $data['callback_url'];
+					$callback_url = '';
+					if (method_exists($this->$method_name,'callback')) {
+						$callback_rs = $this->$method_name->callback(array('return_data'=>$return_data,'msg_id'=>md5($stream_id)));
+						$callback_data = $callback_rs['callback_data'];
+						$callback_url = $callback_rs['callback_url'];
 					}
 					
-					$result = $this->$method_name->result(array('return_data'=>$return_data,'msg_id'=>md5($stream_id)));
-				//	echo $result;
+
 					//记录数据2
 					$this->stream_model->log_second(array('return_data'=>$return_data,'callback_url'=>$callback_url,'callback_data'=>$callback_data,'return_callback'=>''),$stream_id);
 				}
@@ -73,6 +73,7 @@ class Request extends Api_Controller {
 	/*
 	* 定时回调函数
 	*/
+	
 	function time_callback() {
 		$this->load->model('stream_model');
 		$rs = $this->stream_model->findByAttributes("callback_retry = '0' and callback_status='0'",'callback_time desc');
@@ -100,6 +101,7 @@ class Request extends Api_Controller {
 		}
 		echo 'success';
 	}
+	
 	
 	function ent_check() {
 		echo '{"res":"succ","msg":"ok","info":""}';

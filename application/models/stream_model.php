@@ -32,8 +32,8 @@ class Stream_model extends MY_Model {
 		$rs['response_data'] = serialize($data['response_data']);
 		$rs['request_data'] = serialize($request_data);
 		$rs['createtime'] = time();
-		$rs['callback_url'] = $data['callback_url'];
-		$rs['callback_data'] = serialize($data['callback_data']);
+	//	$rs['callback_url'] = $data['callback_url'];
+	//	$rs['callback_data'] = serialize($data['callback_data']);
 		$rs['form_certi'] = $form_certi;
 		$rs['to_certi'] = $to_certi;
 		
