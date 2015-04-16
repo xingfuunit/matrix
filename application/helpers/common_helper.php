@@ -48,6 +48,11 @@ function get_order_status($status) {
 	case 'TRADE_ACTIVE':
 	  $return_status = 'active';
 	  break;
+	  //订单取消，关闭
+	case  'TRADE_CLOSED':
+	  $return_status = 'dead';
+	  break;
+		
 	default:
 	  $return_status = "";
 	}
@@ -88,6 +93,15 @@ function assemble($params)
     return $sign; 
 } 
 
+
+
+
+/**
+ * 返回tark 防止重复使用
+ */
+function get_tark($string){
+	return md5($string.time());
+}
 
 
 //stdClass转数组
