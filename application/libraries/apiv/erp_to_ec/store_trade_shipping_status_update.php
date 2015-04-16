@@ -22,21 +22,46 @@ class store_trade_shipping_status_update {
 		$response_data['delivery_bn'] = $request_data['shipping_id'];
 		$response_data['task'] = $request_data['task'];
 		
-		//回调接口
-		$callback_data = array();
-		$callback_data['res'] = '';
-		$callback_data['msg_id'] = '';
-		$callback_data['err_msg'] = '';
-		$callback_data['sign'] = '';
-		$callback_data['rsp'] = 'succ';
-		$callback_data['data'] = json_encode(array('tid'=>$request_data['tid'],'delivery_id'=>$request_data['shipping_id']));
 		
-    	return array('response_data'=>$response_data,'order_bn'=>$response_data['order_bn'],'from_method'=>$request_data['method'],'node_type'=>$request_data['node_type'],'callback_data'=>$callback_data,'callback_url'=>$request_data['callback_url']);
+    	return array('response_data'=>$response_data,'order_bn'=>$response_data['order_bn'],'from_method'=>$request_data['method'],'node_type'=>$request_data['node_type']);
     //	$CI->load->library('common/httpclient');
     	
     }
     
-    function result($post_data) {
+    
+    function callback($data) {
+    	$request_data = get_post(NULL);
+    	$return_data = json_decode($data['return_data']);
+    	if ($return_data['rsp'] == 'succ') {
+			//回调接口
+			$callback_data = array();
+			$callback_data['res'] = '';
+			$callback_data['msg_id'] = '';
+			$callback_data['err_msg'] = '';
+			$callback_data['sign'] = '';
+			$callback_data['rsp'] = 'succ';
+			$callback_data['data'] = json_encode(array('tid'=>$request_data['tid'],'delivery_id'=>$request_data['shipping_id']));
+    	} else {
+			//回调接口
+			$callback_data = array();
+			$callback_data['res'] = '';
+			$callback_data['msg_id'] = '';
+			$callback_data['err_msg'] = '';
+			$callback_data['sign'] = '';
+			$callback_data['rsp'] = 'succ';
+			$callback_data['data'] = json_encode(array('tid'=>$request_data['tid'],'delivery_id'=>$request_data['shipping_id']));
+    	}
+    	
+		
+		return array('callback_data'=>$callback_data,'callback_url'=>$request_data['callback_url']);
+		
+    }
+    
+    
+    function result($data) {
+
+    	
+    //	return '{"res": "", "msg_id": "552E5458C0A817295CB08340B80FEA46", "rsp": "running", "err_msg": "", "data": ""}';
     //	return $post_data['return_data'];
     }
     

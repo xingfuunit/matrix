@@ -93,9 +93,30 @@ function assemble($params)
     return $sign; 
 } 
 
+
+
+
 /**
  * 返回tark 防止重复使用
  */
 function get_tark($string){
 	return md5($string.time());
+}
+
+
+//stdClass转数组
+function object_array($array)
+{
+   if(is_object($array))
+   {
+    $array = (array)$array;
+   }
+   if(is_array($array))
+   {
+    foreach($array as $key=>$value)
+    {
+     $array[$key] = object_array($value);
+    }
+   }
+   return $array;
 }
