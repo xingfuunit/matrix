@@ -65,6 +65,11 @@ class Request extends Api_Controller {
 					
 					//记录数据2
 					$this->stream_model->log_second(array('return_data'=>$return_data,'callback_url'=>$callback_url,'callback_data'=>$callback_data,'return_callback'=>''),$stream_id);
+					
+					if (isset($data['is_callback']) && $data['is_callback'] == TRUE) {
+						$this->time_callback(md5($stream_id));//立即回调
+					}
+					
 				}
 			}
 			
@@ -78,7 +83,12 @@ class Request extends Api_Controller {
 	* 定时回调函数
 	*/
 	
-	function time_callback() {
+	function time_callback($msg_id = '') {
+		$where = '';
+		if ($msg_id) {
+			$where = " and msg_id='{$msg_id}'";
+		}
+		
 		$this->load->model('stream_model');
 		$rs = $this->stream_model->findByAttributes("callback_retry = '0' and callback_status='0'",'callback_time desc');
 		if ($rs) {
@@ -103,7 +113,7 @@ class Request extends Api_Controller {
 			$data['callback_status'] = 1;
 			$this->stream_model->update($data,array('stream_id'=>$rs['stream_id']));
 		}
-		echo 'success';
+	//	echo 'success';
 	}
 	
 	

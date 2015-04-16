@@ -28,7 +28,7 @@ class store_trade_shipping_update {
 
 		
 		
-    	return array('response_data'=>$response_data,'order_bn'=>$response_data['order_bn'],'from_method'=>$request_data['method'],'node_type'=>$request_data['node_type']);
+    	return array('response_data'=>$response_data,'order_bn'=>$response_data['order_bn'],'from_method'=>$request_data['method'],'node_type'=>$request_data['node_type'],'is_callback'=>FALSE);
     //	$CI->load->library('common/httpclient');
     	
     }
@@ -52,7 +52,7 @@ class store_trade_shipping_update {
 			$callback_data = array();
 			$callback_data['res'] = $return_data['res'];
 			$callback_data['err_msg'] = '';
-			$callback_data['data'] = $return_data['data'];
+			$callback_data['data'] = json_encode(array('tid'=>$request_data['tid'],'delivery_id'=>$request_data['shipping_id']));
 			$callback_data['sign'] = '';
 			$callback_data['rsp'] = 'fail';
 			$callback_data['msg_id'] = $data['msg_id'];

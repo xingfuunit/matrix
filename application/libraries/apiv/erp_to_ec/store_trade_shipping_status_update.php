@@ -32,27 +32,26 @@ class store_trade_shipping_status_update {
     function callback($data) {
     	$request_data = get_post(NULL);
     	$return_data = json_decode($data['return_data']);
+    	$return_data = object_array($return_data);
+    	
     	if ($return_data['rsp'] == 'succ') {
 			//回调接口
 			$callback_data = array();
 			$callback_data['res'] = '';
-			$callback_data['msg_id'] = '';
+			$callback_data['msg_id'] = $data['msg_id'];
 			$callback_data['err_msg'] = '';
+			$callback_data['data'] = json_encode(array('tid'=>$request_data['tid'],'delivery_id'=>$request_data['shipping_id']));
 			$callback_data['sign'] = '';
 			$callback_data['rsp'] = 'succ';
-			$callback_data['data'] = json_encode(array('tid'=>$request_data['tid'],'delivery_id'=>$request_data['shipping_id']));
-    	} else {
-			//回调接口
+		} else {
 			$callback_data = array();
-			$callback_data['res'] = '';
-			$callback_data['msg_id'] = '';
+			$callback_data['res'] = $return_data['res'];
+			$callback_data['msg_id'] = $data['msg_id'];
 			$callback_data['err_msg'] = '';
-			$callback_data['sign'] = '';
-			$callback_data['rsp'] = 'succ';
 			$callback_data['data'] = json_encode(array('tid'=>$request_data['tid'],'delivery_id'=>$request_data['shipping_id']));
-    	}
-    	
-		
+			$callback_data['sign'] = '';
+			$callback_data['rsp'] = 'fail';
+		}
 		return array('callback_data'=>$callback_data,'callback_url'=>$request_data['callback_url']);
 		
     }
@@ -61,8 +60,7 @@ class store_trade_shipping_status_update {
     function result($data) {
 
     	
-    //	return '{"res": "", "msg_id": "552E5458C0A817295CB08340B80FEA46", "rsp": "running", "err_msg": "", "data": ""}';
-    //	return $post_data['return_data'];
+    	return '{"res": "", "msg_id": "'.$data['msg_id'].'", "rsp": "running", "err_msg": "", "data": ""}';
     }
     
     
