@@ -25,8 +25,19 @@ class store_trade_shipping_update {
 		$response_data['task'] = $request_data['task'];
 		$response_data['logi_no'] = $request_data['logistics_no'];
 		
-		//回调接口
+
 		
+		
+    	return array('response_data'=>$response_data,'order_bn'=>$response_data['order_bn'],'from_method'=>$request_data['method'],'node_type'=>$request_data['node_type']);
+    //	$CI->load->library('common/httpclient');
+    	
+    }
+    
+    
+    function callback($data) {
+    	
+    	$request_data = get_post(NULL);
+		//回调接口
 		$callback_data = array();
 		$callback_data['res'] = '';
 		$callback_data['err_msg'] = '';
@@ -34,15 +45,13 @@ class store_trade_shipping_update {
 		$callback_data['sign'] = '';
 		$callback_data['rsp'] = 'succ';
 		
+		return array('callback_data'=>$callback_data,'callback_url'=>$request_data['callback_url']);
 		
-    	return array('response_data'=>$response_data,'order_bn'=>$response_data['order_bn'],'from_method'=>$request_data['method'],'node_type'=>$request_data['node_type'],'callback_data'=>$callback_data,'callback_url'=>$request_data['callback_url']);
-    //	$CI->load->library('common/httpclient');
-    	
     }
     
     
-    function result($post_data) {
-    	
+    function result($data) {
+    	return '';
     }
     
     
