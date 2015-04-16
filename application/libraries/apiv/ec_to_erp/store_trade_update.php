@@ -145,10 +145,14 @@ class Store_trade_update {
     
    
     function result($params){
+    	$response_data = json_decode($params['response_data']);
     	$return_data = json_decode($params['return_data']);
-    	//订单取消必须 返回succ
-    	return json_encode(array('res'=>'', 'msg_id'=>md5(time()), 'rsp'=>'succ', 'err_msg'=>'', 'data'=>array('tid'=>$return_data->data->tid)));
-
+    	switch($response_data['status']){
+    		case 'dead':
+    			return json_encode(array('res'=>'', 'msg_id'=>$params['msg_id'], 'rsp'=>'succ', 'err_msg'=>'', 'data'=>array('tid'=>$return_data->data->tid)));
+    		case 'active':
+    			return json_encode(array('res'=>'', 'msg_id'=>$params['msg_id'], 'rsp'=>'running', 'err_msg'=>'', 'data'=>''));
+    	}
     }
     
     

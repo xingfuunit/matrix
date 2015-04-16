@@ -51,7 +51,7 @@ class Request extends Api_Controller {
 					$return_data = $this->httpclient->post($check_data['api_url'],$data['response_data']);//发送
 					
 					//返回
-					$result = $this->$method_name->result(array('return_data'=>$return_data,'msg_id'=>md5($stream_id)));
+					$result = $this->$method_name->result(array('return_data'=>$return_data,'response_data'=>$data['response_data'],'msg_id'=>md5($stream_id)));
 					echo($result);
 					
 					//回调
