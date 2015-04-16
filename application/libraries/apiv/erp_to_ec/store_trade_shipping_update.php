@@ -63,7 +63,7 @@ class store_trade_shipping_update {
     
     
     function result($data) {
-    	return '{"res": "", "msg_id": "552E5458C0A817295CB08340B80FEA46", "rsp": "running", "err_msg": "", "data": ""}';
+    	return '{"res": "", "msg_id": "'.$data['msg_id'].'", "rsp": "running", "err_msg": "", "data": ""}';
     }
     
     
