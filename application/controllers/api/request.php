@@ -25,13 +25,13 @@ class Request extends Api_Controller {
 		if (get_post('method',true)) {
 			$method_name = get_post('method',true);
 			$method_name = str_replace('.','_',$method_name);
-			$filenames = get_filenames('application/libraries/apiv');
+			
+			$node_type = get_post('node_type',true) == 'ecos.b2c' ? 'erp_to_ec' : 'ec_to_erp';
+			$filenames = get_filenames('application/libraries/apiv/'.$node_type);
 			foreach ($filenames as $key=>$value) {
 				if ($method_name.'.php' == $value) {
-					$node_type = get_post('node_type',true) == 'ecos.b2c' ? 'erp_to_ec' : 'ec_to_erp';
-					$this->load->library('apiv/'.$node_type.'/'.$method_name);
 					
-				//	file_put_contents('api_juzhen.log', 'method_name:'.$method_name."\r\n",FILE_APPEND);
+					$this->load->library('apiv/'.$node_type.'/'.$method_name);
 					
 					$data = $this->$method_name->_init();
 					//记录数据1
@@ -63,9 +63,6 @@ class Request extends Api_Controller {
 						$callback_url = $callback_rs['callback_url'];
 					}
 					
-				//	echo $result;
-				//	file_put_contents('api_juzhen.log', 'result :'.print_r($result,1)."\r\n",FILE_APPEND);
-
 					//记录数据2
 					$this->stream_model->log_second(array('return_data'=>$return_data,'callback_url'=>$callback_url,'callback_data'=>$callback_data,'return_callback'=>''),$stream_id);
 				}
