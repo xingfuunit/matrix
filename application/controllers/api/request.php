@@ -43,6 +43,7 @@ class Request extends Api_Controller {
 					}
 					
 					$return_data = $this->httpclient->post($check_data['api_url'],$data['response_data']);//发送
+					error_log("return_data:".print_r($return_data,1));
 					$return_callback = '';
 					$callback_url = '';
 					$callback_data = '';
@@ -58,7 +59,8 @@ class Request extends Api_Controller {
 					}
 					
 					$result = $this->$method_name->result(array('return_data'=>$return_data,'msg_id'=>md5($stream_id)));
-				//	echo $result;
+					error_log("return_result:".print_r($result,1));
+					echo $result;
 					//记录数据2
 					$this->stream_model->log_second(array('return_data'=>$return_data,'callback_url'=>$callback_url,'callback_data'=>$callback_data,'return_callback'=>''),$stream_id);
 				}
@@ -112,22 +114,13 @@ class Request extends Api_Controller {
 	
 	function test() {
 		$this->load->library('common/httpclient');
-		$txt = '{"is_cod":"false","money":"","ship_distinct":"\u4e1c\u5c71\u533a","app_id":"ecos.b2c","sign":"","date":"2015-04-13 20:13:29","ship_states":"\u5e7f\u4e1c","ship_addr":"\u5e7f\u4e1c\u5e7f\u5dde\u5e02\u4e1c\u5c71\u533a11","ship_name":"13690182120","order_bn":"150413200115901","method":"b2c.delivery.create","status":"READY","ship_email":"","from_api_v":"2.2","delivery":"\u987a\u4e30","logi_name":"\u987a\u4e30\u901f\u8fd0","node_id":"1964902530","ship_tel":"","ship_zip":"\u5e7f\u4e1c\u5e7f\u5dde\u5e02\u4e1c\u5c71\u533a11","delivery_bn":"1504131100001","task":"14289272095387749647654","logi_no":"","ship_city":"\u5e7f\u5dde\u5e02","is_protect":"false","t_begin":1428927209,"items":[{"product_bn":"11002401","product_name":"\u65b0\u897f\u5170\u6d3b\u7eff\u9752\u53e3\u3010\u9884\u552e\u3011","number":"1"}],"buyer_id":"freedom"}';
+
+		$post_data = $this->httpclient->post('http://www.163.com',$txt);
 		
-		$txt = json_decode($txt);
-		
-		
-		$test = json_decode('[{"product_bn": "23000901", "product_name": "beher\u9ed1\u6807\u624b\u5207\u7247\u5305\u88c5\u98ce\u5e7248\u4e2a\u6708", "number": "1"}]', 1);
-		echo '<xmp>'; 
-		var_dump($txt);
-		exit;
-	//	echo '<xmp>';
-	//	var_dump($txt);
-	//	exit;
-	//	echo md5($txt['matrix_certi'].'pzstore!@#$'.$txt['matrix_timestamp']);
-	//	exit;
-		$post_data = $this->httpclient->post('http://mosrapi.pinzhen365.com/index.php/api',$txt);
 		var_dump($post_data);
+		
+		
+		echo '111111';
 	}
 	
 }

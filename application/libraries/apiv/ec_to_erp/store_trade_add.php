@@ -164,6 +164,8 @@ class Store_trade_add {
     
     function result($post_data) {
     	
+    	return json_encode(array('res'=>'', 'msg_id'=>$post_data['msg_id'], 'rsp'=>'running', 'err_msg'=>'', 'data'=>''));
+    	//return '{"res": "", "msg_id": "'.$post_data['msg_id'].'", "rsp": "running", "err_msg": "", "data": ""}';
     }
     
     
