@@ -68,7 +68,7 @@ class Store_trade_aftersale_add {
 			$callback_data['res'] = '';
 			$callback_data['msg_id'] = $data['msg_id'];
 			$callback_data['err_msg'] = '';
-			$callback_data['data'] = json_encode(array('tid'=>$request_data['tid'],'return_id'=>$request_data['return_id']));
+			$callback_data['data'] = json_encode(array('tid'=>$request_data['tid'],'return_id'=>$request_data['aftersale_id']));
 			$callback_data['sign'] = '';
 			$callback_data['rsp'] = 'succ';
 		} else {
