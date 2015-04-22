@@ -31,6 +31,21 @@ function get_pay_status($pay_status) {
 	case 'PAY_FINISH':
 	  $return_status = 1;
 	  break;
+	case 'PAY_TO_MEDIUM':
+	  $return_status = 2;
+	  break;
+	case 'PAY_PART':
+	  $return_status = 3;
+	  break;
+	case 'REFUND_PART':
+	  $return_status = 4;
+	  break;
+	case 'REFUND_ALL':
+	  $return_status = 5;
+	  break;
+	case 'REFUNDING':
+	  $return_status = 6;
+	  break;
 	default:
 	  $return_status = "";
 	}
@@ -52,7 +67,9 @@ function get_order_status($status) {
 	case  'TRADE_CLOSED':
 	  $return_status = 'dead';
 	  break;
-		
+	case  'TRADE_FINISHED':
+	  $return_status = 'finish';
+	  break;
 	default:
 	  $return_status = "";
 	}
@@ -70,6 +87,21 @@ function get_ship_status($status) {
 	{
 	case 'SHIP_NO':
 	  $return_status = 0;
+	  break;
+	case 'SHIP_FINISH':
+	  $return_status = 1;
+	  break;
+	case 'SHIP_PREPARE':
+	  $return_status = 0;
+	  break;
+	case 'SHIP_PART':
+	  $return_status = 2;
+	  break;
+	case 'RESHIP_PART':
+	  $return_status = 3;
+	  break;
+	case 'RESHIP_ALL':
+	  $return_status = 4;
 	  break;
 	default:
 	  $return_status = "";

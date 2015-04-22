@@ -46,19 +46,25 @@ class Request extends Api_Controller {
 					if (isset($data['response_data']['msg_id'])) {
 						$data['response_data']['msg_id'] = md5($stream_id);
 					}
+										
+					
 					
 				//	file_put_contents('api_juzhen.log', 'data:'.$check_data['api_url']."\r\n",FILE_APPEND);
+					error_log('api_url:'.$check_data['api_url']);
 					$return_data = $this->httpclient->post($check_data['api_url'],$data['response_data']);//发送
+					error_log('return data:apiv/'.$node_type.'/'.$method_name.'--'.print_r($return_data,1));
 					
 					//返回
 					$result = $this->$method_name->result(array('return_data'=>$return_data,'response_data'=>$data['response_data'],'msg_id'=>md5($stream_id)));
-					echo($result);
+					echo $result;
+						
+					error_log('matrix_result_once'.print_r($result,1));
 					
 					//回调
 					$callback_data = '';
 					$callback_url = '';
-					if (method_exists($this->$method_name,'callback')) {
-						$callback_rs = $this->$method_name->callback(array('return_data'=>$return_data,'msg_id'=>md5($stream_id)));
+					if (method_exists($this->$method_name,'callback')) {						
+						$callback_rs = $this->$method_name->callback(array('return_data'=>$return_data,'response_data'=>$data['response_data'],'msg_id'=>md5($stream_id)));
 						$callback_data = $callback_rs['callback_data'];
 						$callback_url = $callback_rs['callback_url'];
 					}
@@ -67,8 +73,10 @@ class Request extends Api_Controller {
 					$this->stream_model->log_second(array('return_data'=>$return_data,'callback_url'=>$callback_url,'callback_data'=>$callback_data,'return_callback'=>''),$stream_id);
 					
 					if (isset($data['is_callback']) && $data['is_callback'] == TRUE) {
+						error_log('callback_msg_id:'.md5($stream_id));
 						$this->time_callback(md5($stream_id));//立即回调
 					}
+					error_log('matrix_result_twice'.print_r($result,1));
 					
 				}
 			}
@@ -87,10 +95,13 @@ class Request extends Api_Controller {
 		$where = '';
 		if ($msg_id) {
 			$where = " and msg_id='{$msg_id}'";
+			$filter = "callback_retry = '0' and callback_status='0'".$where;
+		}else{
+			$filter = "callback_retry = '0' and callback_status='0'";
 		}
 		
 		$this->load->model('stream_model');
-		$rs = $this->stream_model->findByAttributes("callback_retry = '0' and callback_status='0'",'callback_time desc');
+		$rs = $this->stream_model->findByAttributes($filter,'callback_time desc');
 		if ($rs) {
 			$this->load->library('common/httpclient');
 			
@@ -103,6 +114,7 @@ class Request extends Api_Controller {
 			$callback_data['matrix_timestamp'] = $now;
 			$callback_data['sign'] = md5($certi_rs['certi_name'].$certi_rs['certi_key'].$now);
 			
+			error_log('callback_url:'.$rs['callback_url'].'--callback_data:'.print_r($callback_data,1));
 			$return_callback = $this->httpclient->post($rs['callback_url'],$callback_data);//发送
 				
 			

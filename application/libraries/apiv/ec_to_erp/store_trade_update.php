@@ -37,8 +37,8 @@ class Store_trade_update {
     	$response_data['custom_mark'] = $request_data['buyer_memo'];//用户订单留言,用于前端显示
     	$response_data['cost_tax'] = $request_data['pay_cost'];
     	$response_data['lastmodify'] = $request_data['lastmodify'];
-    	$response_data['branch_id'] = $request_data['branch_id'];
-    //	$response_data['consigner'] = array();//发货人
+    //	$response_data['branch_id'] = $request_data['branch_id'];
+    	$response_data['consigner'] = '{}';//发货人
     	$response_data['title'] = $request_data['title'];
     	$response_data['node_version'] = '2.0';
     	$response_data['payinfo'] = json_encode(array('pay_name'=>$request_data['payment_type'],'cost_payment'=>$request_data['pay_cost']));
@@ -56,16 +56,14 @@ class Store_trade_update {
     	$response_data['score_g'] = $request_data['buyer_obtain_point_fee'];
     	$response_data['date'] = $request_data['date'];
     	$response_data['tax_title'] = $request_data['tax_content'];//不确定字段
-    	$response_data['mark_text'] = $request_data['trade_memo']; //订单备注(只是在EC和ERP交互用,前端不显示)
-    	$response_data['orders_number'] = $request_data['orders_number'];
-    	$response_data['shipping_tid'] = $request_data['shipping_tid'];
+    	$response_data['task'] = $request_data['task'];
     	$response_data['total_amount'] = $request_data['total_trade_fee'];//不确定字段
     	$response_data['ship_status'] = get_ship_status($request_data['ship_status']);
     	$response_data['cur_amount'] = $request_data['total_currency_fee'];//不确定字段
     	$response_data['modified'] = strtotime($request_data['modified']);
     	$response_data['shipping'] = json_encode(array('shipping_name'=>$request_data['shipping_type'],'cost_protect'=>$request_data['protect_fee'],'is_protect'=>$request_data['is_protect'],'cost_shipping'=>$request_data['shipping_fee']));
     	$response_data['method'] = 'ome.order.add';
-    	$response_data['payed'] = $request_data['payed_fee'];    	
+    	$response_data['payed'] = $request_data['payed_fee'];
     	
     	$request_order = json_decode($request_data['orders']);    	
     	$order_objects = array();
@@ -138,18 +136,45 @@ class Store_trade_update {
     	$response_data['is_tax'] = 0;//未知字段
     	$response_data['createtime'] = strtotime($request_data['modified']);    	
     	
-    	return array('response_data'=>$response_data,'order_bn'=>$response_data['order_bn'],'from_method'=>$request_data['method'],'node_type'=>$request_data['node_type']);
+    	return array('response_data'=>$response_data,'order_bn'=>$response_data['order_bn'],'from_method'=>$request_data['method'],'node_type'=>$request_data['node_type'],'is_callback'=>TRUE);
     //	$CI->load->library('common/httpclient');
     	
     }
     
+    function callback($data) {
+    	$request_data = get_post(NULL);
+    	$return_data = json_decode($data['return_data']);
+    	$return_data = object_array($return_data);
+    	if ($return_data['rsp'] == 'succ') {
+    		//回调接口
+    		$callback_data = array();
+    		$callback_data['res'] = '';
+    		$callback_data['msg_id'] = $data['msg_id'];
+    		$callback_data['err_msg'] = '';
+    		$callback_data['data'] = json_encode($return_data['data']);
+    		$callback_data['sign'] = '';
+    		$callback_data['rsp'] = 'succ';
+    	} else {
+    		$callback_data = array();
+    		$callback_data['res'] = $return_data['res'];
+    		$callback_data['msg_id'] = $data['msg_id'];
+    		$callback_data['err_msg'] = '';
+    		$callback_data['data'] = json_encode($return_data['data']);
+    		$callback_data['sign'] = '';
+    		$callback_data['rsp'] = 'fail';
+    	}
+    	return array('callback_data'=>$callback_data,'callback_url'=>$request_data['callback_url']);
+    }
    
     function result($params){
-    	$response_data = json_decode($params['response_data']);
-    	$return_data = json_decode($params['return_data']);
+    	$return_data = $params['return_data'];
+    	$response_data = $params['response_data'];
+    	if(!$return_data){
+    		return json_encode(array('res'=>'', 'msg_id'=>$params['msg_id'], 'rsp'=>'fail', 'err_msg'=>'', 'data'=>''));
+    	}
     	switch($response_data['status']){
     		case 'dead':
-    			return json_encode(array('res'=>'', 'msg_id'=>$params['msg_id'], 'rsp'=>'succ', 'err_msg'=>'', 'data'=>array('tid'=>$return_data->data->tid)));
+    			return json_encode(array('res'=>'', 'msg_id'=>$params['msg_id'], 'rsp'=>'succ', 'err_msg'=>'', 'data'=>array('tid'=>$response_data['order_bn'])));
     		case 'active':
     			return json_encode(array('res'=>'', 'msg_id'=>$params['msg_id'], 'rsp'=>'running', 'err_msg'=>'', 'data'=>''));
     	}
