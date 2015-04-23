@@ -120,6 +120,34 @@ class Store_trade_payment_add {
     }
     
     
+    function callback($data){
+    	$request_data = get_post(NULL);
+    	$return_data = json_decode($data['return_data']);
+    	$return_data = object_array($return_data);
+    	
+    	file_put_contents('api_juzhen.log', date("Y-m-d H:i:s",time()).' callback_excu_data:'.$return_data."\r\n",FILE_APPEND);
+    	
+    	if ($return_data['rsp'] == 'succ') {
+    		//回调接口
+    		$callback_data = array();
+    		$callback_data['res'] = '';
+    		$callback_data['msg_id'] = $data['msg_id'];
+    		$callback_data['err_msg'] = '';
+    		$callback_data['data'] = json_encode($return_data['data']);
+    		$callback_data['sign'] = '';
+    		$callback_data['rsp'] = 'succ';
+    	} else {
+    		$callback_data = array();
+    		$callback_data['res'] = $return_data['res'];
+    		$callback_data['msg_id'] = $data['msg_id'];
+    		$callback_data['err_msg'] = '';
+    		$callback_data['data'] = json_encode($return_data['data']);
+    		$callback_data['sign'] = '';
+    		$callback_data['rsp'] = 'fail';
+    	}
+    	return array('callback_data'=>$callback_data,'callback_url'=>$request_data['callback_url']);
+    }
+    
 }
 
 ?>
