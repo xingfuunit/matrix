@@ -120,3 +120,12 @@ function object_array($array)
    }
    return $array;
 }
+
+/**
+ * 解决php unserialize 返回false的解决方法
+ */
+function mb_unserialize($serial_str) {  
+    $serial_str= preg_replace('!s:(\d+):"(.*?)";!se', "'s:'.strlen('$2').':\"$2\";'", $serial_str );  
+    $serial_str= str_replace("\r", "", $serial_str);  
+    return unserialize($serial_str);  
+}

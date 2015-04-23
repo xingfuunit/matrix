@@ -71,8 +71,18 @@ class Store_trade_status_update {
     				$response_data['node_id'] = $request_data['from_node_id'];
     				
     				break;
-    				
-    			case '':
+    			//订单已发货
+    			case 'TRADE_FINISHED':
+    				$response_data['status'] = 'finish';
+    				$response_data['task'] = $request_data['task'];
+    				$response_data['from_api_v'] = $request_data['from_api_v'];
+    				$response_data['consignee'] = json_encode(array());
+    				$response_data['app_id'] = $request_data['node_type'];
+    				$response_data['order_bn'] = $request_data['tid'];
+    				$response_data['date'] = $request_data['date'];
+    				$response_data['method'] = 'b2c.order.status_update';
+    				$response_data['node_id'] = $request_data['from_node_id'];
+    				$response_data['sign'] ='';
     				break;
     				
     			default:

@@ -63,7 +63,10 @@ class store_trade_shipping_update {
     
     
     function result($data) {
-    	return '{"res": "", "msg_id": "'.$data['msg_id'].'", "rsp": "running", "err_msg": "", "data": ""}';
+    	$return_data = json_decode($data['return_data']);
+    	$return_data = object_array($return_data);
+    	
+    	return '{"res": "'.$return_data['res'].'", "msg_id": "'.$data['msg_id'].'", "rsp": "running", "err_msg": "", "data": ""}';
     }
     
     
