@@ -10,14 +10,15 @@
 class Httpclient{
 	function __construct(){
 		$CI =& get_instance();
-		$CI->load->library('common/curl');
-		$this->netcore = $CI->curl;
+		$CI->load->library('common/http');
+		$this->netcore = $CI->http;
 	}
     function get($url,$headers=null,$callback=null,$ping_only=false){
         return $this->netcore->action(__FUNCTION__,$url,$headers,$callback,null,$ping_only);
     }
 
     function post($url,$data,$headers=null,$callback=null,$ping_only=false){
+    	error_log('matrix_curl_post');
         return $this->netcore->action(__FUNCTION__,$url,$headers,$callback,$data,$ping_only);
     }
 

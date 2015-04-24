@@ -167,17 +167,19 @@ class Store_trade_update {
     }
    
     function result($params){
-    	$return_data = $params['return_data'];
+    	$return_data = json_decode($params['return_data']);
+    	$return_data = object_array($return_data);
     	$response_data = $params['response_data'];
-    	if(!$return_data){
+    	if($return_data['rsp'] !=  'succ'){
     		return json_encode(array('res'=>'', 'msg_id'=>$params['msg_id'], 'rsp'=>'fail', 'err_msg'=>'', 'data'=>''));
-    	}
-    	switch($response_data['status']){
-    		case 'dead':
-    			return json_encode(array('res'=>'', 'msg_id'=>$params['msg_id'], 'rsp'=>'succ', 'err_msg'=>'', 'data'=>array('tid'=>$response_data['order_bn'])));
-    		case 'active':
-    			return json_encode(array('res'=>'', 'msg_id'=>$params['msg_id'], 'rsp'=>'running', 'err_msg'=>'', 'data'=>''));
-    	}
+    	}else{
+    		switch($response_data['status']){
+    			case 'dead':
+    				return json_encode(array('res'=>$return_data['res'], 'msg_id'=>$params['msg_id'], 'rsp'=>'succ', 'err_msg'=>'', 'data'=>array('tid'=>$response_data['order_bn'])));
+    			case 'active':
+    				return json_encode(array('res'=>$return_data['res'], 'msg_id'=>$params['msg_id'], 'rsp'=>'running', 'err_msg'=>'', 'data'=>''));
+    		}
+    	}    	
     }
     
     

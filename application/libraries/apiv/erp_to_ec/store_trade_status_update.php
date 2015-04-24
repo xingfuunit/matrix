@@ -102,9 +102,13 @@ class Store_trade_status_update {
      */
     function result($params){
     	$return_data = json_decode($params['return_data']);
-    	
-    	//订单取消必须 返回 succ
-    	return json_encode(array('res'=>'', 'msg_id'=>md5(time()), 'rsp'=>'succ', 'err_msg'=>'', 'data'=>array('tid'=>$return_data->data->tid)));
+    	$return_data = object_array($return_data);
+    	$response_data = $params['response_data'];
+    	if($return_data['rsp'] !=  'succ'){
+    		return json_encode(array('res'=>$return_data['res'], 'msg_id'=>$params['msg_id'], 'rsp'=>'fail', 'err_msg'=>'', 'data'=>''));
+    	}else{
+    		return json_encode(array('res'=>$return_data['res'], 'msg_id'=>$params['msg_id'], 'rsp'=>'running', 'err_msg'=>'', 'data'=>''));
+    	}
     }
     
     
