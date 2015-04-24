@@ -52,8 +52,15 @@ class Store_trade_memo_update {
 		return array('callback_data'=>$callback_data,'callback_url'=>$request_data['callback_url']);				
     }
     
-    function result($data) {
-    	return json_encode(array('res'=>'', 'msg_id'=>$data['msg_id'], 'rsp'=>'running', 'err_msg'=>'', 'data'=>''));
+    function result($params) {
+    	$return_data = json_decode($params['return_data']);
+    	$return_data = object_array($return_data);
+    	$response_data = $params['response_data'];
+    	if($return_data['rsp'] !=  'succ'){
+    		return json_encode(array('res'=>$return_data['res'], 'msg_id'=>$params['msg_id'], 'rsp'=>'fail', 'err_msg'=>'', 'data'=>''));
+    	}else{
+    		return json_encode(array('res'=>$return_data['res'], 'msg_id'=>$params['msg_id'], 'rsp'=>'running', 'err_msg'=>'', 'data'=>''));
+    	}
     }
     
     
