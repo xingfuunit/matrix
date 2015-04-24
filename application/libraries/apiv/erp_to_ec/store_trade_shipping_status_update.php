@@ -15,7 +15,7 @@ class store_trade_shipping_status_update {
 		$response_data['sign'] = '';//签名
 		$response_data['order_bn'] = $request_data['tid']; //订单ＩＤ
 		$response_data['method'] = 'b2c.delivery.update';
-		$response_data['status'] = $request_data['status'];//状态
+		$response_data['status'] = strtolower($request_data['status']);//状态
 		$response_data['from_api_v'] = $request_data['from_api_v'];
 		$response_data['node_id'] = $request_data['from_node_id'];
 		$response_data['date'] = $request_data['date'];
@@ -57,10 +57,15 @@ class store_trade_shipping_status_update {
     }
     
     
-    function result($data) {
-
-    	
-    	return '{"res": "", "msg_id": "'.$data['msg_id'].'", "rsp": "running", "err_msg": "", "data": ""}';
+    function result($params) {
+    	$return_data = json_decode($params['return_data']);
+    	$return_data = object_array($return_data);
+    	$response_data = $params['response_data'];
+    	if($return_data['rsp'] !=  'succ'){
+    		return json_encode(array('res'=>$return_data['res'], 'msg_id'=>$params['msg_id'], 'rsp'=>'fail', 'err_msg'=>'', 'data'=>''));
+    	}else{
+    		return json_encode(array('res'=>$return_data['res'], 'msg_id'=>$params['msg_id'], 'rsp'=>'running', 'err_msg'=>'', 'data'=>''));
+    	}
     }
     
     
