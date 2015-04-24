@@ -19,7 +19,7 @@ class Request extends Api_Controller {
 			die('{"res": "fail", "msg_id": "", "rsp": "e00093", "err_msg": "sign error", "data": "sign error"}');
 		}
 		
-	//	file_put_contents('api_juzhen.log', 'matrix_get:'.print_r(get_post(),1),FILE_APPEND);
+		file_put_contents('matrix_juzhen.log', 'matrix_get:'.print_r(get_post(),1),FILE_APPEND);
 		
 		$this->load->model('stream_model');
 		if (get_post('method',true)) {
@@ -28,6 +28,9 @@ class Request extends Api_Controller {
 			
 			$node_type = get_post('node_type',true) == 'ecos.b2c' ? 'erp_to_ec' : 'ec_to_erp';
 			$filenames = get_filenames('application/libraries/apiv/'.$node_type);
+			
+			file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).' matrix_filenames:'.print_r($method_name,1)."\r\n",FILE_APPEND);
+			
 			foreach ($filenames as $key=>$value) {
 				if ($method_name.'.php' == $value) {
 					
@@ -48,16 +51,20 @@ class Request extends Api_Controller {
 					}
 										
 					
-					
-				//	file_put_contents('api_juzhen.log', 'data:'.$check_data['api_url']."\r\n",FILE_APPEND);
+					file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).' matrix_send_data:'.print_r($data['response_data'],1)."\r\n",FILE_APPEND);
+					file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).' matrix_send_api_url:'.print_r($check_data['api_url'],1)."\r\n",FILE_APPEND);
 					error_log('api_url:'.$check_data['api_url']);
+					
 					$return_data = $this->httpclient->post($check_data['api_url'],$data['response_data']);//发送
+					
 					error_log('return data:apiv/'.$node_type.'/'.$method_name.'--'.print_r($return_data,1));
+					file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).' matrix_return_data:'.print_r($return_data,1)."\r\n",FILE_APPEND);
 					
 					//返回
 					$result = $this->$method_name->result(array('return_data'=>$return_data,'response_data'=>$data['response_data'],'msg_id'=>md5($stream_id)));
 					echo $result;
-						
+					
+					file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).' matrix_echo_return:'.print_r($result,1)."\r\n",FILE_APPEND);
 					error_log('matrix_result_once'.print_r($result,1));
 					
 					//回调
@@ -77,6 +84,7 @@ class Request extends Api_Controller {
 						$this->time_callback(md5($stream_id));//立即回调
 					}
 					error_log('matrix_result_twice'.print_r($result,1));
+					
 					
 				}
 			}
@@ -114,9 +122,12 @@ class Request extends Api_Controller {
 			$callback_data['matrix_timestamp'] = $now;
 			$callback_data['sign'] = md5($certi_rs['certi_name'].$certi_rs['certi_key'].$now);
 			
-			error_log('callback_url:'.$rs['callback_url'].'--callback_data:'.print_r($callback_data,1));
+			file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).' send_callback_url:'.print_r($rs['callback_url'],1)."\r\n",FILE_APPEND);
+			file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).' send_callback_data:'.print_r($callback_data,1)."\r\n",FILE_APPEND);
+			
 			$return_callback = $this->httpclient->post($rs['callback_url'],$callback_data);//发送
-				
+			
+			file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).' return_callback:'.print_r($return_callback,1)."\r\n",FILE_APPEND);
 			
 			$data = array();
 			$data['return_callback'] = $return_callback;
