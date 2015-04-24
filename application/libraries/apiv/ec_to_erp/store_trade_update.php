@@ -171,7 +171,12 @@ class Store_trade_update {
     	$return_data = object_array($return_data);
     	$response_data = $params['response_data'];
     	if($return_data['rsp'] !=  'succ'){
-    		return json_encode(array('res'=>'', 'msg_id'=>$params['msg_id'], 'rsp'=>'fail', 'err_msg'=>'', 'data'=>''));
+    		if($return_data['rsp'] ==  'fail' && $return_data['data'] ==  '具体订单内容不能为空！'){
+    			return json_encode(array('res'=>'', 'msg_id'=>$params['msg_id'], 'rsp'=>'succ', 'err_msg'=>'', 'data'=>''));
+    		}else{
+    			return json_encode(array('res'=>$return_data['res'], 'msg_id'=>$params['msg_id'], 'rsp'=>'fail', 'err_msg'=>'', 'data'=>''));    			
+    		}
+    		
     	}else{
     		switch($response_data['status']){
     			case 'dead':
