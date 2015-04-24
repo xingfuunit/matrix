@@ -189,9 +189,21 @@ class Store_trade_add {
     
     function result($post_data) {
     	
+    	file_put_contents('api_juzhen.log', date("Y-m-d H:i:s",time()).' return_data_post_data1:'.print_r($post_data,1)."\r\n",FILE_APPEND);
+    	
     	//return json_encode(array('res'=>'', 'msg_id'=>$post_data['msg_id'], 'rsp'=>'running', 'err_msg'=>'', 'data'=>''));
     	//return '{"res": "", "msg_id": "'.$post_data['msg_id'].'", "rsp": "running", "err_msg": "", "data": ""}';
-    	return '{"res": "", "msg_id": "'.$post_data['msg_id'].'", "rsp": "running", "err_msg": "", "data": ""}';
+    	$return_data = json_decode($post_data['return_data']);
+    	$return_data = object_array($return_data);
+    	
+    	if($return_data['rsp'] ==  'succ'){
+    		return '{"res": "", "msg_id": "'.$post_data['msg_id'].'", "rsp": "running", "err_msg": "", "data": ""}';
+    	}else{
+    		return '{"res": "", "msg_id": "'.$post_data['msg_id'].'", "rsp": "fail", "err_msg": "", "data": ""}';
+    	}
+
+	
+    	
     }
     
     
