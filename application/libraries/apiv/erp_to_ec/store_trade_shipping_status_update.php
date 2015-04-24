@@ -15,7 +15,7 @@ class store_trade_shipping_status_update {
 		$response_data['sign'] = '';//签名
 		$response_data['order_bn'] = $request_data['tid']; //订单ＩＤ
 		$response_data['method'] = 'b2c.delivery.update';
-		$response_data['status'] = $request_data['status'];//状态
+		$response_data['status'] = strtolower($request_data['status']);//状态
 		$response_data['from_api_v'] = $request_data['from_api_v'];
 		$response_data['node_id'] = $request_data['from_node_id'];
 		$response_data['date'] = $request_data['date'];
