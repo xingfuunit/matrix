@@ -100,7 +100,7 @@ class Request extends Api_Controller {
 		}else{
 			//异步发送
 			$filter = "callback_retry = '0' and callback_status='0'";
-			$limit = 2;//发三次
+			$limit = 2;//
 		}
 		
 		
