@@ -42,7 +42,7 @@ class Store_trade_refund_add {
 		$response_data['method'] = 'b2c.refund.create';
 		$response_data['buyer_id'] = $request_data['buyer_id'];
 	
-    	return array('response_data'=>$response_data,'order_bn'=>$response_data['order_bn'],'from_method'=>$request_data['method'],'node_type'=>$request_data['node_type']);
+    	return array('response_data'=>$response_data,'order_bn'=>$response_data['order_bn'],'from_method'=>$request_data['method'],'node_type'=>$request_data['node_type'],'is_callback'=>TRUE);
     //	$CI->load->library('common/httpclient');
     	
     }
@@ -79,7 +79,7 @@ class Store_trade_refund_add {
     	if($return_data['rsp'] !=  'succ'){
     		return json_encode(array('res'=>$return_data['res'], 'msg_id'=>$params['msg_id'], 'rsp'=>'fail', 'err_msg'=>'', 'data'=>''));
     	}else{
-    		return json_encode(array('res'=>$return_data['res'], 'msg_id'=>$params['msg_id'], 'rsp'=>'running', 'err_msg'=>'', 'data'=>''));
+    		return json_encode(array('res'=>$return_data['res'], 'msg_id'=>$params['msg_id'], 'rsp'=>'succ', 'err_msg'=>'', 'data'=>''));
     	}
     }
     
