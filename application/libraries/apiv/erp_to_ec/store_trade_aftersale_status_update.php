@@ -1,6 +1,6 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class store_trade_shipping_add {
+class Store_trade_aftersale_status_update {
 
 	public function __construct()
 	{
