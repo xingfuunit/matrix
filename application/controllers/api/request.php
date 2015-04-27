@@ -92,6 +92,7 @@ class Request extends Api_Controller {
 	function time_callback($msg_id = '') {
 		$where = '';
 		$this->load->model('stream_model');
+		$limit = 1;
 		if ($msg_id) {
 			//立即发送
 			$where = " and msg_id='{$msg_id}'";
@@ -99,33 +100,36 @@ class Request extends Api_Controller {
 		}else{
 			//异步发送
 			$filter = "callback_retry = '0' and callback_status='0'";
+			$limit = 2;//发三次
 		}
 		
 		
-		$rs = $this->stream_model->findByAttributes($filter,'callback_time desc');
+		$rs = $this->stream_model->findAll($filter,$limit);
 		
 		if ($rs) {
-			$this->load->library('common/httpclient');
-			
-			$callback_data = unserialize($rs['callback_data']);
-			$this->load->model('certi_model');
-			$certi_rs = $this->certi_model->findByAttributes(array('certi_name'=>$rs['form_certi']));
-			
-			$now = time();
-			$callback_data['matrix_certi'] = $certi_rs['certi_name'];
-			$callback_data['matrix_timestamp'] = $now;
-			$callback_data['sign'] = md5($certi_rs['certi_name'].$certi_rs['certi_key'].$now);
-			
-			error_log('callback_url:'.$rs['callback_url'].'--callback_data:'.print_r($callback_data,1));
-			$return_callback = $this->httpclient->post($rs['callback_url'],$callback_data);//发送
+			foreach ($rs as $key => $value) {
+				$this->load->library('common/httpclient');
 				
-			if (empty($return_callback) == FALSE && $return_callback != '-3') {
-				$data = array();
-				$data['return_callback'] = $return_callback;
-				$data['callback_retry'] = $rs['callback_retry'] + 1;
-				$data['callback_time'] = time();
-				$data['callback_status'] = 1;
-				$this->stream_model->update($data,array('stream_id'=>$rs['stream_id']));
+				$callback_data = unserialize($value['callback_data']);
+				$this->load->model('certi_model');
+				$certi_rs = $this->certi_model->findByAttributes(array('certi_name'=>$value['form_certi']));
+				
+				$now = time();
+				$callback_data['matrix_certi'] = $certi_rs['certi_name'];
+				$callback_data['matrix_timestamp'] = $now;
+				$callback_data['sign'] = md5($certi_rs['certi_name'].$certi_rs['certi_key'].$now);
+				
+				error_log('callback_url:'.$value['callback_url'].'--callback_data:'.print_r($callback_data,1));
+				$return_callback = $this->httpclient->post($value['callback_url'],$callback_data);//发送
+					
+				if (empty($return_callback) == FALSE && $return_callback != '-3') {
+					$data = array();
+					$data['return_callback'] = $return_callback;
+					$data['callback_retry'] = $value['callback_retry'] + 1;
+					$data['callback_time'] = time();
+					$data['callback_status'] = 1;
+					$this->stream_model->update($data,array('stream_id'=>$value['stream_id']));
+				}
 			}
 		}
 	//	echo 'success';
