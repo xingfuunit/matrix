@@ -49,7 +49,7 @@ class Request extends Api_Controller {
 					
 					
 					error_log('api_url:'.$check_data['api_url']);
-					$return_data = $this->httpclient->post($check_data['api_url'],$data['response_data']);//发送
+					$return_data = $this->httpclient->set_timeout(15)->post($check_data['api_url'],$data['response_data']);//发送
 					error_log('return data:apiv/'.$node_type.'/'.$method_name.'--'.print_r($return_data,1));
 					
 					//返回
@@ -93,6 +93,7 @@ class Request extends Api_Controller {
 		$where = '';
 		$this->load->model('stream_model');
 		$limit = 1;
+		$timeout = 10;
 		if ($msg_id) {
 			//立即发送
 			$where = " and msg_id='{$msg_id}'";
@@ -101,6 +102,7 @@ class Request extends Api_Controller {
 			//异步发送
 			$filter = "callback_retry = '0' and callback_status='0'";
 			$limit = 2;//
+			$timeout = 20;
 		}
 		
 		
@@ -120,7 +122,7 @@ class Request extends Api_Controller {
 				$callback_data['sign'] = md5($certi_rs['certi_name'].$certi_rs['certi_key'].$now);
 				
 				error_log('callback_url:'.$value['callback_url'].'--callback_data:'.print_r($callback_data,1));
-				$return_callback = $this->httpclient->post($value['callback_url'],$callback_data);//发送
+				$return_callback = $this->httpclient->set_timeout($timeout)->post($value['callback_url'],$callback_data);//发送
 					
 				if (empty($return_callback) == FALSE && $return_callback != '-3') {
 					$data = array();
