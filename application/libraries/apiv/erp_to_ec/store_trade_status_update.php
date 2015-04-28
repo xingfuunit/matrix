@@ -73,6 +73,7 @@ class Store_trade_status_update {
 			    			'order_bn'=>$response_data['order_bn'],
 			    			'from_method'=>$request_data['method'],
 			    			'node_type'=>$request_data['node_type'],
+			    			'is_callback'=>TRUE,
 			    			);
     				break;
     			//订单已发货
@@ -146,7 +147,12 @@ class Store_trade_status_update {
     	if($return_data['rsp'] !=  'succ'){
     		return json_encode(array('res'=>$return_data['res'], 'msg_id'=>$params['msg_id'], 'rsp'=>'fail', 'err_msg'=>'', 'data'=>''));
     	}else{
-    		return json_encode(array('res'=>$return_data['res'], 'msg_id'=>$params['msg_id'], 'rsp'=>'running', 'err_msg'=>'', 'data'=>''));
+    		if($response_data['status'] == 'dead'){
+    			return json_encode(array('res'=>$return_data['res'], 'msg_id'=>$params['msg_id'], 'rsp'=>'succ', 'err_msg'=>'', 'data'=>''));
+    		}else{
+    			return json_encode(array('res'=>$return_data['res'], 'msg_id'=>$params['msg_id'], 'rsp'=>'running', 'err_msg'=>'', 'data'=>''));
+    		}
+    		
     	}
     }
     
