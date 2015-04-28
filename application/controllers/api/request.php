@@ -53,7 +53,7 @@ class Request extends Api_Controller {
 					file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).' matrix_接口数据:'.print_r($data,1)."\r\n",FILE_APPEND);
 					
 					error_log('api_url:'.$check_data['api_url']);
-					$return_data = $this->httpclient->post($check_data['api_url'],$data['response_data']);//发送
+					$return_data = $this->httpclient->set_timeout(15)->post($check_data['api_url'],$data['response_data']);//发送
 					error_log('return data:apiv/'.$node_type.'/'.$method_name.'--'.print_r($return_data,1));
 					
 					file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).' matrix_send_return:'.print_r($return_data,1)."\r\n",FILE_APPEND);
@@ -100,6 +100,7 @@ class Request extends Api_Controller {
 		$where = '';
 		$this->load->model('stream_model');
 		$limit = 1;
+		$timeout = 10;
 		if ($msg_id) {
 			//立即发送
 			$where = " and msg_id='{$msg_id}'";
@@ -108,6 +109,7 @@ class Request extends Api_Controller {
 			//异步发送
 			$filter = "callback_retry = '0' and callback_status='0'";
 			$limit = 2;//
+			$timeout = 20;
 		}
 		
 		
@@ -131,7 +133,7 @@ class Request extends Api_Controller {
 				file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).' matrix_callback_data:'.print_r($value['$callback_data'],1)."\r\n",FILE_APPEND);
 				
 				error_log('callback_url:'.$value['callback_url'].'--callback_data:'.print_r($callback_data,1));
-				$return_callback = $this->httpclient->post($value['callback_url'],$callback_data);//发送
+				$return_callback = $this->httpclient->set_timeout($timeout)->post($value['callback_url'],$callback_data);//发送
 				
 				file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).' matrix_callback_return:'.print_r($return_callback,1)."\r\n",FILE_APPEND);
 					
