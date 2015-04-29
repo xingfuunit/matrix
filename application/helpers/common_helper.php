@@ -19,7 +19,7 @@ function get_post($index = '', $xss_clean = FALSE) {
 }
 
 /*
-	·µ»Ø¶©µ¥Ö§¸¶×´Ì¬
+	è¿”å›è®¢å•æ”¯ä»˜çŠ¶æ€
 */
 function get_pay_status($pay_status) {
 	$return_status = 0;
@@ -54,7 +54,7 @@ function get_pay_status($pay_status) {
 
 
 /*
-	·µ»Ø¶©µ¥×´Ì¬
+	è¿”å›è®¢å•çŠ¶æ€
 */
 function get_order_status($status) {
 	$return_status = '';
@@ -63,7 +63,7 @@ function get_order_status($status) {
 	case 'TRADE_ACTIVE':
 	  $return_status = 'active';
 	  break;
-	  //¶©µ¥È¡Ïû£¬¹Ø±Õ
+	  //è®¢å•å–æ¶ˆï¼Œå…³é—­
 	case  'TRADE_CLOSED':
 	  $return_status = 'dead';
 	  break;
@@ -79,7 +79,7 @@ function get_order_status($status) {
 
 
 /*
-	·¢»õ×´Ì¬
+	å‘è´§çŠ¶æ€
 */
 function get_ship_status($status) {
 	$return_status = 0;
@@ -129,14 +129,14 @@ function assemble($params)
 
 
 /**
- * ·µ»Øtark ·ÀÖ¹ÖØ¸´Ê¹ÓÃ
+ * è¿”å›tark é˜²æ­¢é‡å¤ä½¿ç”¨
  */
 function get_tark($string){
 	return md5($string.time());
 }
 
 
-//stdClass×ªÊı×é
+//stdClassè½¬æ•°ç»„
 function object_array($array)
 {
    if(is_object($array))
@@ -154,10 +154,10 @@ function object_array($array)
 }
 
 /**
- * ½â¾öphp unserialize ·µ»ØfalseµÄ½â¾ö·½·¨
+ * è§£å†³php unserialize è¿”å›falseçš„è§£å†³æ–¹æ³•
  */
 function mb_unserialize($serial_str) {  
-    $serial_str= preg_replace('!s:(\d+):"(.*?)";!se', "'s:'.strlen('$2').':\"$2\";'", $serial_str );  
-    $serial_str= str_replace("\r", "", $serial_str);  
+   // $serial_str= preg_replace('!s:(\d+):"(.*?)";!se', "'s:'.strlen('$2').':\"$2\";'", $serial_str );  
+   // $serial_str= str_replace("\r", "", $serial_str);  
     return unserialize($serial_str);  
 }

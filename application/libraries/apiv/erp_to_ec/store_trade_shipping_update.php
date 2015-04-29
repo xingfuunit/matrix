@@ -1,7 +1,9 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class store_trade_shipping_update {
-
+	
+	var $right_away = FALSE;
+	
 	public function __construct()
 	{
 	//	 $data =  $this->_init();
@@ -25,8 +27,6 @@ class store_trade_shipping_update {
 		$response_data['task'] = $request_data['task'];
 		$response_data['logi_no'] = $request_data['logistics_no'];
 		
-
-		
 		
     	return array('response_data'=>$response_data,'order_bn'=>$response_data['order_bn'],'from_method'=>$request_data['method'],'node_type'=>$request_data['node_type']);
     //	$CI->load->library('common/httpclient');
@@ -35,7 +35,7 @@ class store_trade_shipping_update {
     
     
     function callback($data) {
-    	$request_data = get_post(NULL);
+    	$request_data = $data['request_data'];
     	$return_data = json_decode($data['return_data']);
     	$return_data = object_array($return_data);
     	
