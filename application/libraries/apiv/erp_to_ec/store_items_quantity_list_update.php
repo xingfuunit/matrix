@@ -21,7 +21,7 @@ class Store_items_quantity_list_update {
 		$response_data['node_id'] = $request_data['from_node_id'];
 		$response_data['method'] = 'b2c.update_store.updateStore';
 	
-    	return array('response_data'=>$response_data,'from_method'=>$request_data['method'],'node_type'=>$request_data['node_type'],'is_callback'=>TRUE);
+    	return array('response_data'=>$response_data,'from_method'=>$request_data['method'],'node_type'=>$request_data['node_type']);
     //	$CI->load->library('common/httpclient');
     	
     }

@@ -42,7 +42,7 @@ class Store_trade_refund_add {
 		$response_data['method'] = 'b2c.refund.create';
 		$response_data['buyer_id'] = $request_data['buyer_id'];
 	
-    	return array('response_data'=>$response_data,'order_bn'=>$response_data['order_bn'],'from_method'=>$request_data['method'],'node_type'=>$request_data['node_type'],'is_callback'=>TRUE);
+    	return array('response_data'=>$response_data,'order_bn'=>$response_data['order_bn'],'from_method'=>$request_data['method'],'node_type'=>$request_data['node_type']);
     //	$CI->load->library('common/httpclient');
     	
     }

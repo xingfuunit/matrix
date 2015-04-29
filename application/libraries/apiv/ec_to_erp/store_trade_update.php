@@ -136,7 +136,7 @@ class Store_trade_update {
     	$response_data['is_tax'] = 0;//未知字段
     	$response_data['createtime'] = strtotime($request_data['modified']);    	
     	
-    	return array('response_data'=>$response_data,'order_bn'=>$response_data['order_bn'],'from_method'=>$request_data['method'],'node_type'=>$request_data['node_type'],'is_callback'=>TRUE);
+    	return array('response_data'=>$response_data,'order_bn'=>$response_data['order_bn'],'from_method'=>$request_data['method'],'node_type'=>$request_data['node_type']);
     //	$CI->load->library('common/httpclient');
     	
     }

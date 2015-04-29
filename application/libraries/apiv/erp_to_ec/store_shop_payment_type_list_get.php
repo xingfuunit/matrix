@@ -59,7 +59,6 @@ class Store_shop_payment_type_list_get {
     	return array('response_data'=>$response_data,
     			'from_method'=>$request_data['method'],
     			'node_type'=>$request_data['node_type'],
-    			'is_callback'=>TRUE,
     			);
     	
     }
@@ -67,11 +66,15 @@ class Store_shop_payment_type_list_get {
     /**
      * 处理结果返回
      */
-    function result($params){
+	function result($params){
     	$return_data = json_decode($params['return_data']);
-    	
-//     	post_data_re:{"res":"succ","msg":"ok","info":""}
-    	return json_encode(array('res'=>'succ', 'msg'=>'ok', 'info'=>''));
+    	$return_data = object_array($return_data);
+    	$response_data = $params['response_data'];
+    	if($return_data['rsp'] !=  'succ'){
+    		return json_encode(array('res'=>$return_data['res'], 'msg_id'=>$params['msg_id'], 'rsp'=>'fail', 'err_msg'=>'', 'data'=>''));
+    	}else{
+    		return json_encode(array('res'=>$return_data['res'], 'msg_id'=>$params['msg_id'], 'rsp'=>'running', 'err_msg'=>'', 'data'=>''));
+    	}
     }
     
     

@@ -46,7 +46,7 @@ class Store_trade_aftersale_add {
     	$response_data['node_id'] = $request_data['from_node_id'];
     	$response_data['add_time'] = strtotime($request_data['created']);
     	    	
-    	return array('response_data'=>$response_data,'order_bn'=>$response_data['order_bn'],'from_method'=>$request_data['method'],'node_type'=>$request_data['node_type'],'is_callback'=>TRUE);
+    	return array('response_data'=>$response_data,'order_bn'=>$response_data['order_bn'],'from_method'=>$request_data['method'],'node_type'=>$request_data['node_type']);
     //	$CI->load->library('common/httpclient');
     	
     }
