@@ -7,7 +7,7 @@
  */
 
 class Store_trade_status_update {
-
+	var $right_away = FALSE;
 	public function __construct()
 	{
 	//	 $data =  $this->_init();
@@ -107,7 +107,8 @@ class Store_trade_status_update {
     
     
     function callback($data) {
-    	$request_data = get_post(NULL);
+    //	$request_data = get_post(NULL);
+    	$request_data = $data['request_data'];
     	
     	if($request_data['type'] == 'status'){
     		switch ($request_data['status'])

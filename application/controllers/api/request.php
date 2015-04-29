@@ -11,7 +11,6 @@ class Request extends Api_Controller {
 		$sign = get_post('sign',true); //验证码 md5(证书名加密匙加时间戳)
 		$to_certi = get_post('matrix_to_certi',true); //验证码 md5(证书名加密匙加时间戳)
 		
-		
 		//验证请求
 		$this->load->model('certi_model');
 		$check_data = $this->certi_model->check($certi,$timestamp,$sign,$to_certi);
@@ -31,12 +30,7 @@ class Request extends Api_Controller {
 				if ($method_name.'.php' == $value) {
 					
 					$this->load->library('apiv/'.$node_type.'/'.$method_name);
-					
 					$data = $this->$method_name->_init();
-					//记录数据1
-					$stream_id = $this->stream_model->log_first($data,$certi,$check_data['certi_name']);
-					//转发
-					$this->load->library('common/httpclient');
 					$now = time();
 					$data['response_data']['matrix_certi'] = $check_data['certi_name'];
 					$data['response_data']['matrix_timestamp'] = $now;
@@ -45,37 +39,41 @@ class Request extends Api_Controller {
 					if (isset($data['response_data']['msg_id'])) {
 						$data['response_data']['msg_id'] = md5($stream_id);
 					}
-										
+					
+					$send_status = 0;
+					if (method_exists($this->$method_name,'callback')) {
+						$send_status = 1;
+					}
+					//记录数据1
+					$stream_id = $this->stream_model->log_first($data,$certi,$check_data['certi_name'],$send_status);
 					
 					
-					error_log('api_url:'.$check_data['api_url']);
-					$return_data = $this->httpclient->set_timeout(15)->post($check_data['api_url'],$data['response_data']);//发送
-					error_log('return data:apiv/'.$node_type.'/'.$method_name.'--'.print_r($return_data,1));
+					//立即发送
+					$return_data = '';
+					if ($this->$method_name->right_away == TRUE) {
+						$this->load->library('common/httpclient');
+						$return_data = $this->httpclient->set_timeout(20)->post($check_data['api_url'],$data['response_data']);//发送
+						
+						//立即回调
+						$callback_url = '';
+						$callback_data = '';
+						$return_callback = '';
+						if (method_exists($this->$method_name,'callback')) {
+							$callback_rs = $this->$method_name->callback(array('return_data'=>$return_data,'response_data'=>$data['response_data'],'request_data'=>get_post(NULL),'msg_id'=>md5($stream_id)));
+							$callback_data = $callback_rs['callback_data'];
+							$callback_url = $callback_rs['callback_url'];
+							$form_certi = $this->certi_model->findByAttributes(array('certi_name'=>$certi));
+							$callback_data['matrix_certi'] = $form_certi['certi_name'];
+							$callback_data['matrix_timestamp'] = $now;
+							$callback_data['sign'] = md5($form_certi['certi_name'].$form_certi['certi_key'].$now);
+							$return_callback = $this->httpclient->set_timeout(15)->post($rs['callback_url'],$callback_data);//发送
+						}
+						
+						$this->stream_model->log_send_all(array('return_data'=>$return_data,'callback_url'=>$callback_url,'callback_data'=>$callback_data,'return_callback'=>$return_callback),$stream_id);
+					}
 					
-					//返回
 					$result = $this->$method_name->result(array('return_data'=>$return_data,'response_data'=>$data['response_data'],'msg_id'=>md5($stream_id)));
 					echo $result;
-						
-					error_log('matrix_result_once'.print_r($result,1));
-					
-					//回调
-					$callback_data = '';
-					$callback_url = '';
-					if (method_exists($this->$method_name,'callback')) {						
-						$callback_rs = $this->$method_name->callback(array('return_data'=>$return_data,'response_data'=>$data['response_data'],'msg_id'=>md5($stream_id)));
-						$callback_data = $callback_rs['callback_data'];
-						$callback_url = $callback_rs['callback_url'];
-					}
-					
-					//记录数据2
-					$this->stream_model->log_second(array('return_data'=>$return_data,'callback_url'=>$callback_url,'callback_data'=>$callback_data,'return_callback'=>''),$stream_id);
-					
-					if (isset($data['is_callback']) && $data['is_callback'] == TRUE) {
-						error_log('callback_msg_id:'.md5($stream_id));
-						$this->time_callback(md5($stream_id));//立即回调
-					}
-					error_log('matrix_result_twice'.print_r($result,1));
-					
 				}
 			}
 			
@@ -85,57 +83,7 @@ class Request extends Api_Controller {
 		
 	}
 	
-	/*
-	* 定时回调函数
-	*/
 	
-	function time_callback($msg_id = '') {
-		$where = '';
-		$this->load->model('stream_model');
-		$limit = 1;
-		$timeout = 10;
-		if ($msg_id) {
-			//立即发送
-			$where = " and msg_id='{$msg_id}'";
-			$filter = "callback_retry = '0' and callback_status='0'".$where;
-		}else{
-			//异步发送
-			$filter = "callback_retry = '0' and callback_status='0'";
-			$limit = 2;//
-			$timeout = 20;
-		}
-		
-		
-		$rs = $this->stream_model->findAll($filter,$limit);
-		
-		if ($rs) {
-			foreach ($rs as $key => $value) {
-				$this->load->library('common/httpclient');
-				
-				$callback_data = unserialize($value['callback_data']);
-				$this->load->model('certi_model');
-				$certi_rs = $this->certi_model->findByAttributes(array('certi_name'=>$value['form_certi']));
-				
-				$now = time();
-				$callback_data['matrix_certi'] = $certi_rs['certi_name'];
-				$callback_data['matrix_timestamp'] = $now;
-				$callback_data['sign'] = md5($certi_rs['certi_name'].$certi_rs['certi_key'].$now);
-				
-				error_log('callback_url:'.$value['callback_url'].'--callback_data:'.print_r($callback_data,1));
-				$return_callback = $this->httpclient->set_timeout($timeout)->post($value['callback_url'],$callback_data);//发送
-					
-				if (empty($return_callback) == FALSE && $return_callback != '-3') {
-					$data = array();
-					$data['return_callback'] = $return_callback;
-					$data['callback_retry'] = $value['callback_retry'] + 1;
-					$data['callback_time'] = time();
-					$data['callback_status'] = 1;
-					$this->stream_model->update($data,array('stream_id'=>$value['stream_id']));
-				}
-			}
-		}
-	//	echo 'success';
-	}
 	
 	
 	function ent_check() {

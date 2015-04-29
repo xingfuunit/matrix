@@ -7,7 +7,7 @@
  */
 
 class Store_trade_payment_add {
-
+	var $right_away = FALSE;
 	public function __construct()
 	{
 

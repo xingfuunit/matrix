@@ -1,7 +1,7 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Store_items_quantity_list_update {
-
+	var $right_away = FALSE;
 	public function __construct()
 	{
 	//	 $data =  $this->_init();
@@ -27,7 +27,8 @@ class Store_items_quantity_list_update {
     }
     
     function callback($data) {		
-    	$request_data = get_post(NULL);
+    //	$request_data = get_post(NULL);
+    	$request_data = $data['request_data'];
     	$return_data = json_decode($data['return_data']);
     	$return_data = object_array($return_data);   	
     	if ($return_data['rsp'] == 'succ') {

@@ -1,7 +1,7 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class store_trade_reship_add {
-
+	var $right_away = FALSE;
 	public function __construct()
 	{
 	//	 $data =  $this->_init();
@@ -59,7 +59,8 @@ class store_trade_reship_add {
     
     function callback($data) {
 		
-    	$request_data = get_post(NULL);
+    //	$request_data = get_post(NULL);
+    	$request_data = $data['request_data'];
     	$return_data = json_decode($data['return_data']);
     	$return_data = object_array($return_data);
     	

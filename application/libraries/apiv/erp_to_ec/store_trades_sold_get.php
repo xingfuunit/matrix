@@ -1,7 +1,7 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Store_trades_sold_get {
-	
+	var $right_away = FALSE;
 	public function __construct()
 	{
 	//	 $data =  $this->_init();

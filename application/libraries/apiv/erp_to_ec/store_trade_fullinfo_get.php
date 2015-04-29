@@ -4,7 +4,7 @@
  * 获取定单详情接口
  */
 class store_trade_fullinfo_get {
-
+	var $right_away = FALSE;
 	public function __construct()
 	{
 	//	 $data =  $this->_init();

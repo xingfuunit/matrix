@@ -23,7 +23,7 @@ class Httpclient{
     }
 
 	function set_timeout($timeout){
-        $this->netcore->set_timeout(10);
+        $this->netcore->set_timeout($timeout);
         $this->timeout = $timeout;
 		return $this;
     }
