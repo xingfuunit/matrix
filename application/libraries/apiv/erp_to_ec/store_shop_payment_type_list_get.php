@@ -1,7 +1,7 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * 订单状态更新 (erp 到ec)
+ * 支付方式同步接口(erp 到ec)   
  * @author Administrator
  *
  */
@@ -13,36 +13,6 @@ class Store_shop_payment_type_list_get {
 	//	 $data =  $this->_init();
 	//	 return $data;
 	}
-    
-// 	post_data:Array
-// 	(
-// 	[to_node_id] => 1964902530
-// 	[node_type] => ecos.b2c
-// 	[to_api_v] => 2.0
-// 	[from_api_v] => 2.2
-// 	[app_id] => ecos.ome
-// 	[method] => store.shop.payment_type.list.get
-// 	[date] => 2015-04-16 14:02:04
-// 	[callback_url] => http://lwqerp.pinzhen365.com/index.php/openapi/rpc_callback/async_result_handler/id/1429164124759764001528-1429164124/app_id/ome
-// 	[format] => json
-// 	[certi_id] => 1066139131
-// 	[v] => 1
-// 	[from_node_id] => 1266942530
-// 	[task] => 1429164124759764001528
-// 	[sign] => 4744056C8102B1D318DA6B92341FFC4D
-// 	)
-
-	
-// 	1接收:Array
-// 	(
-// 			[task] => 1429164124759764001528
-// 			[date] => 2015-04-16 14:02:04
-// 			[sign] => 4567F4F98A3A6C3A194A10DAF6AF05E5
-// 			[from_api_v] => 2.2
-// 			[app_id] => ecos.b2c
-// 			[node_id] => 1266942530
-// 			[method] => ectools.get_payments.get_all
-// 	)
 	
     function _init() {
     	$request_data = get_post(NULL);
@@ -59,7 +29,6 @@ class Store_shop_payment_type_list_get {
     	return array('response_data'=>$response_data,
     			'from_method'=>$request_data['method'],
     			'node_type'=>$request_data['node_type'],
-    			'is_callback'=>TRUE,
     			);
     	
     }
@@ -69,9 +38,13 @@ class Store_shop_payment_type_list_get {
      */
     function result($params){
     	$return_data = json_decode($params['return_data']);
-    	
-//     	post_data_re:{"res":"succ","msg":"ok","info":""}
-    	return json_encode(array('res'=>'succ', 'msg'=>'ok', 'info'=>''));
+    	$return_data = object_array($return_data);
+    	$response_data = $params['response_data'];
+    	if($return_data['rsp'] !=  'succ'){
+    		return json_encode(array('res'=>$return_data['res'], 'msg_id'=>$params['msg_id'], 'rsp'=>'fail', 'err_msg'=>'', 'data'=>''));
+    	}else{
+    		return json_encode(array('res'=>$return_data['res'], 'msg_id'=>$params['msg_id'], 'rsp'=>'running', 'err_msg'=>'', 'data'=>''));
+    	}
     }
     
     
@@ -92,8 +65,6 @@ class Store_shop_payment_type_list_get {
     	$callback_data['sign'] = '';
     	$callback_data['rsp'] = 'succ';
     	$callback_data['msg_id'] = $data['msg_id'];
-    	
-    	file_put_contents('api_juzhen.log', 'callback_data:'.print_r($request_data,1)."\r\n",FILE_APPEND);
     	
     	return array('callback_data'=>$callback_data,'callback_url'=>$request_data['callback_url']);
     

@@ -50,7 +50,6 @@ class Request extends Api_Controller {
 					
 					file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).' matrix_send_data:'.print_r($data['response_data'],1)."\r\n",FILE_APPEND);
 					file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).' matrix_send_api_url:'.print_r($check_data['api_url'],1)."\r\n",FILE_APPEND);
-					file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).' matrix_接口数据:'.print_r($data,1)."\r\n",FILE_APPEND);
 					
 					error_log('api_url:'.$check_data['api_url']);
 					$return_data = $this->httpclient->set_timeout(15)->post($check_data['api_url'],$data['response_data']);//发送
@@ -111,7 +110,6 @@ class Request extends Api_Controller {
 			$limit = 2;//
 			$timeout = 20;
 		}
-		
 		
 		$rs = $this->stream_model->findAll($filter,$limit);
 		
