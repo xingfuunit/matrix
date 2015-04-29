@@ -19,6 +19,7 @@ class Request extends Api_Controller {
 			die('{"res": "fail", "msg_id": "", "rsp": "e00093", "err_msg": "sign error", "data": "sign error"}');
 		}
 		
+		file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).' matrix_get_data:'.print_r($_POST,1)."\r\n",FILE_APPEND);
 		
 		$this->load->model('stream_model');
 		if (get_post('method',true)) {
@@ -47,16 +48,21 @@ class Request extends Api_Controller {
 					}
 										
 					
+					file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).' matrix_send_data:'.print_r($data['response_data'],1)."\r\n",FILE_APPEND);
+					file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).' matrix_send_api_url:'.print_r($check_data['api_url'],1)."\r\n",FILE_APPEND);
 					
 					error_log('api_url:'.$check_data['api_url']);
 					$return_data = $this->httpclient->set_timeout(15)->post($check_data['api_url'],$data['response_data']);//发送
 					error_log('return data:apiv/'.$node_type.'/'.$method_name.'--'.print_r($return_data,1));
+					
+					file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).' matrix_send_return:'.print_r($return_data,1)."\r\n",FILE_APPEND);
 					
 					//返回
 					$result = $this->$method_name->result(array('return_data'=>$return_data,'response_data'=>$data['response_data'],'msg_id'=>md5($stream_id)));
 					echo $result;
 						
 					error_log('matrix_result_once'.print_r($result,1));
+					file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).' matrix_echo_result:'.print_r($result,1)."\r\n",FILE_APPEND);
 					
 					//回调
 					$callback_data = '';
@@ -105,7 +111,6 @@ class Request extends Api_Controller {
 			$timeout = 20;
 		}
 		
-		
 		$rs = $this->stream_model->findAll($filter,$limit);
 		
 		if ($rs) {
@@ -121,8 +126,14 @@ class Request extends Api_Controller {
 				$callback_data['matrix_timestamp'] = $now;
 				$callback_data['sign'] = md5($certi_rs['certi_name'].$certi_rs['certi_key'].$now);
 				
+				
+				file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).' matrix_callback_url:'.print_r($value['callback_url'],1)."\r\n",FILE_APPEND);
+				file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).' matrix_callback_data:'.print_r($value['$callback_data'],1)."\r\n",FILE_APPEND);
+				
 				error_log('callback_url:'.$value['callback_url'].'--callback_data:'.print_r($callback_data,1));
 				$return_callback = $this->httpclient->set_timeout($timeout)->post($value['callback_url'],$callback_data);//发送
+				
+				file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).' matrix_callback_return:'.print_r($return_callback,1)."\r\n",FILE_APPEND);
 					
 				if (empty($return_callback) == FALSE && $return_callback != '-3') {
 					$data = array();
