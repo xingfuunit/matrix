@@ -7,7 +7,7 @@
  */
 
 class Store_trade_status_update {
-	var $right_away = FALSE;
+	var $right_away = TRUE;
 	public function __construct()
 	{
 	//	 $data =  $this->_init();
