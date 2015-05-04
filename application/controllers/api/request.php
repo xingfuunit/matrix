@@ -7,7 +7,7 @@ class Request extends Api_Controller {
 	public function index($sync='')
 	{
 		
-		
+	
 		$from_node_id = get_post('from_node_id',true);//
 		$timestamp = get_post('matrix_timestamp',true); //时间戳
 		$sign = get_post('sign',true); //验证码 md5(证书名加密匙加时间戳)
@@ -16,14 +16,14 @@ class Request extends Api_Controller {
 		//验证请求
 		$this->load->model('certi_model');
 		$check_data = $this->certi_model->check($from_node_id,$timestamp,$sign,$to_node_id);
-		
+
 	//	error_log(print_r(get_post(NULL),1),3,'e.log');
 		if ($check_data == false) {
 			die('{"res": "fail", "msg_id": "", "rsp": "e00093", "err_msg": "sign error", "data": "sign error"}');
 		}
 		
 		
-		$check_data['library_type'] = 'shopex';
+	//	$check_data['library_type'] = 'shopex';
 		if ($check_data['library_type']) {
 			$this->load->library('handle/'.$check_data['library_type'].'.php');
 			$this->$check_data['library_type']->_init($sync,$check_data);
