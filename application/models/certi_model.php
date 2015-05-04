@@ -22,13 +22,25 @@ class Certi_model extends MY_Model {
     }
     
     //验证请求信息
-    function check($certi,$timestamp,$token,$to_certi) {
+    function check($from_node_id,$timestamp,$token,$to_node_id) {
     	
-    	$rs = parent::findByAttributes(array('certi_name'=>$certi));
+    	$rs = parent::findByAttributes(array('node_id'=>$from_node_id));
     	if ($rs) {
     		$md5_key = md5($rs['certi_name'].$rs['certi_key'].$timestamp);
     		if ($token == $md5_key) {
-    			$to_rs = parent::findByAttributes(array('certi_name'=>$to_certi));
+    			$to_rs = parent::findByAttributes(array('node_id'=>$to_node_id));
+    			
+    			$to_rs['library_type'] = '';
+    			if ($rs['certi_type'] == 'erp' && $to_rs['certi_type'] == 'ecstore') {
+    				$to_rs['library_type'] = 'shopex';
+    			}  else if ($rs['certi_type'] == 'ecstore' && $to_rs['certi_type'] == 'erp') {
+    				$to_rs['library_type'] = 'shopex';
+    			} else if ($rs['certi_type'] == 'youzan' && $to_rs['certi_type'] == 'erp') {
+    				$to_rs['library_type'] = 'youzan';
+    			}  else if ($rs['certi_type'] == 'erp' && $to_rs['certi_type'] == 'youzan') {
+    				$to_rs['library_type'] = 'youzan';
+    			} 
+    			
     			return $to_rs;
     		}
     	} 

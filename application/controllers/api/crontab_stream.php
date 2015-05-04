@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Crontab extends Api_Controller {
+class Crontab_stream extends Api_Controller {
 	
 	var $send_list = array();
 
@@ -17,8 +17,6 @@ class Crontab extends Api_Controller {
 	{
 		$now = time();
 		$stream_rs = $this->stream_model->query("SELECT * FROM api_stream WHERE (send_status=0 or send_status=1)  and retry <= 3 and locked=0 GROUP BY order_bn limit 5");
-		//echo "SELECT * FROM api_stream WHERE (send_status=0 or send_status=1)  and retry = 3 and retry_time-".$now.">0  GROUP BY order_bn limit 5";
-	//	var_dump($stream_rs);
 		$send_list = array();//发送数组
 		$callback_list = array();//回调数组
 		foreach ($stream_rs as $key=>$value) {
@@ -53,7 +51,7 @@ class Crontab extends Api_Controller {
 		
 		
 		//多线程发送请求
-		$this->load->library('common/multi_curl',array($this,'multi_send'));
+		$this->load->library('common/multi_curl',array($this,'_multi_send'));
 		
 		
  		foreach ($send_list as $val) {
@@ -73,13 +71,13 @@ class Crontab extends Api_Controller {
 				$return_data = $this->send_list[$value['stream_id']];
 			}
 			if ($return_data && $return_data != '-3') {
-				$callback_list[] = $this->get_callback_data($value['request_data'],$value['response_data'],$return_data,$value['form_certi'],$value['stream_id']);
+				$callback_list[] = $this->_get_callback_data($value['request_data'],$value['response_data'],$return_data,$value['form_certi'],$value['stream_id']);
 			}
 		}
 		
 		
 		$this->multi_curl->__destruct();
-		$this->multi_curl->__set('callback',array($this,'multi_callback'));
+		$this->multi_curl->__set('callback',array($this,'_multi_callback'));
 		foreach ($callback_list as $val) {
 			echo 'foreach callback '.$val ['post_data']['stream_id'].'<br />';
 		    $this->multi_curl->request($val ['url'], $val ['method'], $val ['post_data'], $val ['header'], $val ['options']);
@@ -91,7 +89,7 @@ class Crontab extends Api_Controller {
 	}
 	
 	
-	function get_callback_data($request_data,$response_data,$return_data,$form_certi,$stream_id) {
+	function _get_callback_data($request_data,$response_data,$return_data,$form_certi,$stream_id) {
 		//回调
 		$form_certi = $this->certi_model->findByAttributes(array('certi_name'=>$form_certi));//请求方
 		$callback_list = array();
@@ -129,7 +127,7 @@ class Crontab extends Api_Controller {
 	}
 	
 	
-	function multi_send($return_data, $info,$error,$request)
+	function _multi_send($return_data, $info,$error,$request)
 	{
 		
 	    //记录返回数据
@@ -140,12 +138,8 @@ class Crontab extends Api_Controller {
 	    echo ' sended '.$stream_id.'<br />';
 	}
 	
-	function multi_callback($return_callback, $info,$error, $request)
+	function _multi_callback($return_callback, $info,$error, $request)
 	{
-		
-	//	echo '<xmp>';
-	//	var_dump($info);
-	//	echo '</xmp>';
 		
 	    //记录返回数据
 	    
@@ -157,5 +151,10 @@ class Crontab extends Api_Controller {
 		echo ' callback '.$stream_id.'<br />';
 		
 	}
+	
+	
+	
+	
+	
 }
 
