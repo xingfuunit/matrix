@@ -4,7 +4,7 @@ class Request extends Api_Controller {
 
 	
 	
-	public function index()
+	public function index($sync='')
 	{
 		$certi = get_post('matrix_certi',true);//证书名，32位
 		$timestamp = get_post('matrix_timestamp',true); //时间戳
@@ -18,6 +18,7 @@ class Request extends Api_Controller {
 			die('{"res": "fail", "msg_id": "", "rsp": "e00093", "err_msg": "sign error", "data": "sign error"}');
 		}
 		
+		file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).' matrix_get_post:'.print_r(get_post(),1)."\r\n",FILE_APPEND);
 		
 		$this->load->model('stream_model');
 		if (get_post('method',true)) {
@@ -31,6 +32,7 @@ class Request extends Api_Controller {
 					
 					$this->load->library('apiv/'.$node_type.'/'.$method_name);
 					$data = $this->$method_name->_init();
+					
 					$now = time();
 					$data['response_data']['matrix_certi'] = $check_data['certi_name'];
 					$data['response_data']['matrix_timestamp'] = $now;
@@ -48,11 +50,22 @@ class Request extends Api_Controller {
 					$stream_id = $this->stream_model->log_first($data,$certi,$check_data['certi_name'],$send_status);
 					
 					
+					//url判断同步
+					if($sync){
+						$this->$method_name->right_away = TRUE;
+					}
+					
 					//立即发送
 					$return_data = '';
 					if ($this->$method_name->right_away == TRUE) {
 						$this->load->library('common/httpclient');
+						
+						file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).'matrix_send_url :'.print_r($check_data['api_url'],1)."\r\n",FILE_APPEND);
+						file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).'matrix_send_data:'.print_r($check_data['response_data'],1)."\r\n",FILE_APPEND);
+						
 						$return_data = $this->httpclient->set_timeout(20)->post($check_data['api_url'],$data['response_data']);//发送
+						
+						file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).'matrix_send_return:'.print_r($return_data,1)."\r\n",FILE_APPEND);
 						
 						//立即回调
 						$callback_url = '';
@@ -66,7 +79,13 @@ class Request extends Api_Controller {
 							$callback_data['matrix_certi'] = $form_certi['certi_name'];
 							$callback_data['matrix_timestamp'] = $now;
 							$callback_data['sign'] = md5($form_certi['certi_name'].$form_certi['certi_key'].$now);
+							
+							file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).'matrix_callback_url:'.print_r($rs['callback_url'],1)."\r\n",FILE_APPEND);
+							file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).'matrix_callback_data:'.print_r($callback_data,1)."\r\n",FILE_APPEND);
+							
 							$return_callback = $this->httpclient->set_timeout(15)->post($rs['callback_url'],$callback_data);//发送
+							
+							file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).'matrix_callback_return:'.print_r($return_callback,1)."\r\n",FILE_APPEND);
 						}
 						
 						$this->stream_model->log_send_all(array('return_data'=>$return_data,'callback_url'=>$callback_url,'callback_data'=>$callback_data,'return_callback'=>$return_callback),$stream_id);
