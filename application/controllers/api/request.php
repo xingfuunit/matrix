@@ -22,6 +22,7 @@ class Request extends Api_Controller {
 			die('{"res": "fail", "msg_id": "", "rsp": "e00093", "err_msg": "sign error", "data": "sign error"}');
 		}
 		
+
 		
 	//	$check_data['library_type'] = 'shopex';
 		if ($check_data['library_type']) {
