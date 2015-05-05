@@ -19,12 +19,12 @@ class Request extends Api_Controller {
 
 	//	error_log(print_r(get_post(NULL),1),3,'e.log');
 		if ($check_data == false) {
-			die('{"res": "fail", "msg_id": "", "rsp": "e00093", "err_msg": "sign error", "data": "sign error"}');
+			die('{"res": "fail", "msg_id": "", "rsp": "e00099", "err_msg": "sign error", "data": "sign error"}');
 		}
 		
 
 		
-	//	$check_data['library_type'] = 'shopex';
+		$check_data['library_type'] = 'shopex';
 		if ($check_data['library_type']) {
 			$this->load->library('handle/'.$check_data['library_type'].'.php');
 			$this->$check_data['library_type']->_init($sync,$check_data);
