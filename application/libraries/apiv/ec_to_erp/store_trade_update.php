@@ -59,6 +59,7 @@ class Store_trade_update {
     	$response_data['score_g'] = $request_data['buyer_obtain_point_fee'];
     	$response_data['date'] = $request_data['date'];
     	$response_data['tax_title'] = $request_data['tax_content'];//不确定字段
+    	$response_data['mark_text'] = $request_data['trade_memo'];//订单备注   	 
     	$response_data['task'] = $request_data['task'];
     	$response_data['total_amount'] = $request_data['total_trade_fee'];//不确定字段
     	$response_data['ship_status'] = get_ship_status($request_data['ship_status']);
