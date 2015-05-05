@@ -1,14 +1,14 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Store_trade_update {
-	var $right_away = FALSE;
+	var $right_away = TRUE;
 	public function __construct()
 	{
-		$request_data = get_post(NULL);
+// 		$request_data = get_post(NULL);
 		
-		if(get_order_status($request_data['status']) == 'dead'){
-			$this->right_away = TRUE;
-		}
+// 		if(get_order_status($request_data['status']) == 'dead'){
+// 			$this->right_away = TRUE;
+// 		}
 	}
     
     function _init() {
