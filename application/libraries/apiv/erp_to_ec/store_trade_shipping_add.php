@@ -22,6 +22,7 @@ class store_trade_shipping_add {
 		$response_data['ship_addr'] = $request_data['receiver_address'];//收货地址
 		$response_data['ship_name'] = $request_data['receiver_name'];//收货人名称
 		$response_data['order_bn'] = $request_data['tid'];//订单ID
+		$response_data['ship_mobile'] = $request_data['receiver_mobile'];//收货人手机
 		$response_data['method'] = 'b2c.delivery.create';
 		$response_data['status'] = $request_data['status'];//状态
 		$response_data['ship_email'] = $request_data['receiver_email'];//email
