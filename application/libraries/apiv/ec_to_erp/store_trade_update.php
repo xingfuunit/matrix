@@ -68,6 +68,7 @@ class Store_trade_update {
     	$response_data['shipping'] = json_encode(array('shipping_name'=>$request_data['shipping_type'],'cost_protect'=>$request_data['protect_fee'],'is_protect'=>$request_data['is_protect'],'cost_shipping'=>$request_data['shipping_fee']));
     	$response_data['method'] = 'ome.order.add';
     	$response_data['payed'] = $request_data['payed_fee'];
+    	$response_data['is_auto_complete'] = $request_data['is_auto_complete'];
     	
     	$request_order = json_decode($request_data['orders']);    	
     	$order_objects = array();
@@ -191,7 +192,7 @@ class Store_trade_update {
     			case 'dead':
     				return json_encode(array('res'=>$return_data['res'], 'msg_id'=>$params['msg_id'], 'rsp'=>'succ', 'err_msg'=>'', 'data'=>array('tid'=>$response_data['order_bn'])));
     			case 'active':
-    				return json_encode(array('res'=>$return_data['res'], 'msg_id'=>$params['msg_id'], 'rsp'=>'running', 'err_msg'=>'', 'data'=>''));
+    				return json_encode(array('res'=>$return_data['res'], 'msg_id'=>$params['msg_id'], 'rsp'=>'succ', 'err_msg'=>'', 'data'=>''));
     		}
     	}    	
     }
