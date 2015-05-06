@@ -18,7 +18,6 @@ class Httpclient{
     }
 
     function post($url,$data,$headers=null,$callback=null,$ping_only=false){
-    	error_log('matrix_curl_post');
         return $this->netcore->action(__FUNCTION__,$url,$headers,$callback,$data,$ping_only);
     }
 

@@ -190,8 +190,6 @@ class Store_trade_add {
     
     function result($params) {
     	
-    	file_put_contents('api_juzhen.log', date("Y-m-d H:i:s",time()).' return_data_post_data1:'.print_r($params,1)."\r\n",FILE_APPEND);
-    	
     	//return json_encode(array('res'=>'', 'msg_id'=>$post_data['msg_id'], 'rsp'=>'running', 'err_msg'=>'', 'data'=>''));
     	//return '{"res": "", "msg_id": "'.$post_data['msg_id'].'", "rsp": "running", "err_msg": "", "data": ""}';
     	$return_data = json_decode($params['return_data']);

@@ -50,12 +50,7 @@ class Shopex  {
 					if ($CI->$method_name->right_away == TRUE) {
 						$CI->load->library('common/httpclient');
 						
-						file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).'matrix_send_url :'.print_r($check_data['api_url'],1)."\r\n",FILE_APPEND);
-						file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).'matrix_send_data:'.print_r($data['response_data'],1)."\r\n",FILE_APPEND);
-						
 						$return_data = $CI->httpclient->set_timeout(20)->post($check_data['api_url'],$data['response_data']);//发送
-						
-						file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).'matrix_send_return:'.print_r($return_data,1)."\r\n",FILE_APPEND);
 						
 						//立即回调
 						$callback_url = '';
@@ -71,12 +66,7 @@ class Shopex  {
 							$callback_data['matrix_timestamp'] = $now;
 							$callback_data['sign'] = md5($form_certi['certi_name'].$form_certi['certi_key'].$now);
 							
-							file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).'matrix_callback_url:'.print_r($callback_url,1)."\r\n",FILE_APPEND);
-							file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).'matrix_callback_data:'.print_r($callback_data,1)."\r\n",FILE_APPEND);
-							
 							$return_callback = $CI->httpclient->set_timeout(15)->post($callback_url,$callback_data);//发送
-							
-							file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).'matrix_callback_return:'.print_r($return_callback,1)."\r\n",FILE_APPEND);
 						}
 						
 						$CI->stream_model->log_send_all(array('return_data'=>$return_data,'callback_url'=>$callback_url,'callback_data'=>$callback_data,'return_callback'=>$return_callback),$stream_id);
