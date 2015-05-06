@@ -153,7 +153,6 @@ class http{
                         break;
                     }
                 }
-                error_log('responseCode:'.$this->responseCode);
                 switch($this->responseCode){
                 case 301:
                 case 302:

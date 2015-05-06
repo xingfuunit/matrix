@@ -48,13 +48,7 @@ class Youzan  {
 					if ($this->$method_name->right_away == TRUE) {
 						$this->load->library('common/httpclient');
 						
-						file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).'matrix_send_url :'.print_r($check_data['api_url'],1)."\r\n",FILE_APPEND);
-						file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).'matrix_send_data:'.print_r($check_data['response_data'],1)."\r\n",FILE_APPEND);
-						
 						$return_data = $this->httpclient->set_timeout(20)->post($check_data['api_url'],$data['response_data']);//发送
-						
-						file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).'matrix_send_return:'.print_r($return_data,1)."\r\n",FILE_APPEND);
-						
 						
 					//	$this->stream_model->log_send_all(array('return_data'=>$return_data,'callback_url'=>$callback_url,'callback_data'=>$callback_data,'return_callback'=>$return_callback),$stream_id);
 					}

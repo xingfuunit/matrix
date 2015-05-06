@@ -141,10 +141,6 @@ class Store_trade_update {
     	$response_data['is_tax'] = 0;//未知字段
     	$response_data['createtime'] = strtotime($request_data['modified']);    	
     	
-    	file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).'init_callback_return:'.print_r($response_data,1)."\r\n",FILE_APPEND);
-    	file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).'right_away:'.print_r($this->right_away,1)."\r\n",FILE_APPEND);
-    	
-    	
     	return array('response_data'=>$response_data,'order_bn'=>$response_data['order_bn'],'from_method'=>$request_data['method'],'node_type'=>$request_data['node_type']);
     //	$CI->load->library('common/httpclient');
     	

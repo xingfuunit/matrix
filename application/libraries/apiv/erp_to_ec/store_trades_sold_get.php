@@ -70,8 +70,6 @@ class Store_trades_sold_get {
     	$return_data = json_decode($post_data['return_data']);
     	$return_data = object_array($return_data);
     	
-    	file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).' matrix_store_trades_result:'.print_r($post_data,1)."\r\n",FILE_APPEND);
-    	
     	if($return_data['rsp'] ==  'succ'){
     		 $re = array(
     					'res' 			=> '',
@@ -81,8 +79,6 @@ class Store_trades_sold_get {
     					'rsp'			=> 'succ',
     					'res_ltype'		=> $return_data['data']['total_results'],
     				);
-    		 
-    		 file_put_contents('matrix_juzhen.log', date("Y-m-d H:i:s",time()).' matrix_store_trades_re:'.print_r($re,1)."\r\n",FILE_APPEND);
     		 
     		 return json_encode($re);
     	}else{
