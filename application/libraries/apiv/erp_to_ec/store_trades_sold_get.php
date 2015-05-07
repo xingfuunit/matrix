@@ -22,6 +22,10 @@ class Store_trades_sold_get {
     	$CI->load->model('certi_model');
     	$certi_rs = $CI->certi_model->findByAttributes(array('certi_name'=>$certi));
     	
+    	//获取 ecstore，erp token
+    	$ecstore_certi = $CI->certi_model->findByAttributes(array('certi_type'=>'ecstore'));
+    	$erp_certi = $CI->certi_model->findByAttributes(array('certi_type'=>'erp'));
+    	
     	
     	$response_data['to_node_id'] = $request_data['to_node_id'];
     	$response_data['rights_level'] = "custom";
@@ -40,7 +44,7 @@ class Store_trades_sold_get {
     	
     	//此task 奇怪 处理端ec 会有，但发送端erp没有,   随便生成一个试试 
     	$response_data['task'] = md5($response_data['date']);
-    	$response_data['from_token'] = $CI->config->item('erp_token');
+    	$response_data['from_token'] = $erp_certi['token'];
     	
     	$response_data['api_url'] = $certi_rs['api_url'];
 //     	$response_data['api_url'] = 'http://lwq.pinzhen365.com/api';
@@ -53,7 +57,7 @@ class Store_trades_sold_get {
     	$response_data['_id'] = "rel_".$request_data['from_node_id']."_store.trades.sold.get_".$request_data['to_node_id'];
     	$response_data['method'] = "b2c.order.search";
     	$response_data['channel'] = "";
-    	$response_data['to_token'] = $CI->config->item('ec_token');
+    	$response_data['to_token'] = $ecstore_certi['token'];
     	
     	return array(
     			'response_data'=>$response_data,
