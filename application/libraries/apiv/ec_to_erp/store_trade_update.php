@@ -1,5 +1,8 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+/*
+ * ec 发送到erp 订单 取消编辑修改
+ */
 class Store_trade_update {
 	var $right_away = TRUE;
 	public function __construct()
@@ -188,7 +191,7 @@ class Store_trade_update {
     			case 'dead':
     				return json_encode(array('res'=>$return_data['res'], 'msg_id'=>$params['msg_id'], 'rsp'=>'succ', 'err_msg'=>'', 'data'=>array('tid'=>$response_data['order_bn'])));
     			case 'active':
-    				return json_encode(array('res'=>$return_data['res'], 'msg_id'=>$params['msg_id'], 'rsp'=>'succ', 'err_msg'=>'', 'data'=>''));
+    				return json_encode(array('res'=>$return_data['res'], 'msg_id'=>$params['msg_id'], 'rsp'=>'running', 'err_msg'=>'', 'data'=>''));
     		}
     	}    	
     }
