@@ -15,11 +15,11 @@ class store_trade_fullinfo_get {
     	$CI =& get_instance();
     	$request_data = get_post(NULL);
     	
-    	$certi = get_post('matrix_certi',true);//证书名，32位
-    	$to_certi = get_post('matrix_to_certi',true); //验证码 md5(证书名加密匙加时间戳)
+    	$from_node_id = get_post('from_node_id',true);//证书名，32位
+    	$to_node_id = get_post('to_node_id',true); //验证码 md5(证书名加密匙加时间戳)
     	$CI->load->model('certi_model');
-    	$from_rs = $CI->certi_model->findByAttributes(array('certi_name'=>$certi));
-    	$to_rs = $CI->certi_model->findByAttributes(array('certi_name'=>$to_certi));
+    	$from_rs = $CI->certi_model->findByAttributes(array('node_id'=>$from_node_id));
+    	$to_rs = $CI->certi_model->findByAttributes(array('node_id'=>$to_node_id));
     	
     	$response_data = array();
     	$response_data['to_node_id'] = $request_data['to_node_id'];

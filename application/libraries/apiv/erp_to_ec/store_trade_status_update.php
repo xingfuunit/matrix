@@ -91,6 +91,21 @@ class Store_trade_status_update {
 
 					return array('callback_data'=>$callback_data,'callback_url'=>$request_data['callback_url']);
    				break;
+   				case 'TRADE_CLOSED':
+   					$return_data = json_decode($data['return_data']);
+   					$return_data = object_array($return_data);
+   				
+   					//回调接口
+   					$callback_data = array();
+   					$callback_data['res'] = '';
+   					$callback_data['err_msg'] = '';
+   					$callback_data['data'] = json_encode(array('tid'=>$request_data['tid']));
+   					$callback_data['sign'] = '';
+   					$callback_data['rsp'] = 'succ';
+   					$callback_data['msg_id'] = $data['msg_id'];
+   				
+   					return array('callback_data'=>$callback_data,'callback_url'=>$request_data['callback_url']);
+   					break;
     			default:
     				return array('callback_data'=>'','callback_url'=>'');
     		}
