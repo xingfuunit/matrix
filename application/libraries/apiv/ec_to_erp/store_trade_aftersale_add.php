@@ -53,7 +53,8 @@ class Store_trade_aftersale_add {
     }
     
     function callback($data) {
-    	$request_data = get_post(NULL);
+    	//$request_data = get_post(NULL);
+    	$request_data = $data['request_data'];
     	$return_data = json_decode($data['return_data']);
     	$return_data = object_array($return_data);
     	if ($return_data['rsp'] == 'succ') {
