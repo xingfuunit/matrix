@@ -4,7 +4,7 @@
  * ec 发送到erp 订单 取消编辑修改
  */
 class Store_trade_update {
-	var $right_away = TRUE;
+	var $right_away = FALSE;
 	public function __construct()
 	{
 // 		$request_data = get_post(NULL);
