@@ -5,7 +5,7 @@
  *
  */
 class Store_trade_aftersale_add {
-	var $right_away = TRUE;
+	var $right_away = FALSE;
 	public function __construct()
 	{
 	//	 $data =  $this->_init();
