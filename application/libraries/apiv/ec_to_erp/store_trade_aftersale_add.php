@@ -5,7 +5,7 @@
  *
  */
 class Store_trade_aftersale_add {
-	var $right_away = FALSE;
+	var $right_away = TRUE;
 	public function __construct()
 	{
 	//	 $data =  $this->_init();
@@ -13,8 +13,7 @@ class Store_trade_aftersale_add {
 	}
     
     function _init() {
-    //	$request_data = get_post(NULL);
-    	$request_data = $data['request_data'];
+    	$request_data = get_post(NULL);
     	$response_data = array();
     	$response_data['comment'] = $request_data['messager'];//未确定字段
     	$response_data['status'] = $request_data['status'];
